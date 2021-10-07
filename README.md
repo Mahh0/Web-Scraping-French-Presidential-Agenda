@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Mahh0/Web-Scraping-Of-Presidential-Agenda/edit/main/README">
-    <img src="logo.png" alt="Logo" width="3400" height="1800">
+    <img src="logo.png" alt="Logo" width="850" height="450">
   </a>
 
   <h3 align="center">Web Scraping of Presidential Agenda</h3>
