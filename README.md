@@ -26,13 +26,14 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is a project for the semesters 3 & 4 for <a href="https://iut-blois.univ-tours.fr/version-francaise/formations/dut-reseaux-et-telecommunications" target="_blank">IUT R&T Of Blois</a>
+This project is a project for the semesters 3 & 4 for <a href="https://iut-blois.univ-tours.fr/version-francaise/formations/dut-reseaux-et-telecommunications">IUT R&T Of Blois</a>
 
-Tralalalalala
+The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. We will use Java and Eclipse plus  <a href="https://jsoup.org/">Jsoup Library</a>
+After scraping datas, they are put in a <a href="https://www.mysql.com/fr/">MySql Database</a>, running on the computer where the program is.
 
 ### Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+// This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [Jsoup](https://jsoup.org/)
 
 
@@ -44,29 +45,24 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+All you need is included in the archive that you can download. You just need git to clone the repo (or manually do it).
+* git
   ```sh
-  npm install npm@latest -g
+  git clone https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda
   ```
 
-### Installation
+### Installation (Windows and Linux)
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Unzip the files
+
+2. Install Java
+Linux : ...
+Windows : ...
+
+2. Run main ... 
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   ./main.java
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```JS
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
