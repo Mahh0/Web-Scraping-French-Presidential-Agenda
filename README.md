@@ -33,15 +33,16 @@ After scraping datas, they are put in a <a href="https://www.mysql.com/fr/">MySq
 
 ### Built With
 
-// This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [Jsoup](https://jsoup.org/)
+* [Java](https://www.java.com/fr/)
+* [Eclipse](https://www.eclipse.org/downloads/)
+* [MySQL and JDBC](https://dev.mysql.com/downloads/)
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Download the archive for <a href="https://www.mysql.com/fr/">Windows</a> or <a href="https://www.mysql.com/fr/">Linux</a>.
 
 ### Prerequisites
 
@@ -55,22 +56,10 @@ All you need is included in the archive that you can download. You just need git
 
 1. Unzip the files
 
-2. Install Java
-Linux : ...
-Windows : ...
-
-2. Run main ... 
+2. Run the script. It will launch the java program and the database ... 
    ```sh
    ./main.java
    ```
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 
 
 <!-- ROADMAP -->
