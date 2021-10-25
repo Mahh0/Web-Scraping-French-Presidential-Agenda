@@ -11,7 +11,7 @@
   <h3 align="center">Web Scraping of Presidential Agenda</h3>
 
   <p align="center">
-    This project is actually not public, but in progress ;D
+    This project is actually in progress.
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
