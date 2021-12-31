@@ -3,17 +3,12 @@
 
 <!-- PROJECT LOGO -->
 <br />
-<div align="center">
-  <a href="https://github.com/othneildrew/Mahh0/Web-Scraping-Of-Presidential-Agenda/edit/main/README">
-    <img src="logo.png" alt="Logo" width="850" height="450">
-  </a>
-
   <h3 align="center">Web Scraping of Presidential Agenda</h3>
 
   <p align="center">
-    This project is actually in progress.
+    En cours...
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Template used »</strong></a>
     <br />
     <br />
     <a href="https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda/pulls">Pull Request</a>
@@ -28,7 +23,7 @@
 
 This project is a project for the semesters 3 & 4 for <a href="https://iut-blois.univ-tours.fr/version-francaise/formations/dut-reseaux-et-telecommunications">IUT R&T Of Blois</a>
 
-The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. We will use Java and Eclipse plus  <a href="https://jsoup.org/">Jsoup Library</a>
+The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. We will use Java and Eclipse/VSCode plus  <a href="https://jsoup.org/">Jsoup Library</a>
 After scraping datas, they are put in a <a href="https://www.mysql.com/fr/">MySql Database</a>, running on the computer where the program is.
 
 ### Built With
@@ -42,7 +37,7 @@ After scraping datas, they are put in a <a href="https://www.mysql.com/fr/">MySq
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Download the archive for <a href="https://www.mysql.com/fr/">Windows</a> or <a href="https://www.mysql.com/fr/">Linux</a>.
+Download the source code for Windows or Linux and open it in Eclipse.
 
 ### Prerequisites
 
