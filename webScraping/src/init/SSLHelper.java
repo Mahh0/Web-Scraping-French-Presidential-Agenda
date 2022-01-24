@@ -1,5 +1,4 @@
 package init;
-
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -7,16 +6,16 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
-/*
- * SSLHelper is a class which permits to add the SSL Certificates
- */
 public class SSLHelper {
+    /*
+    * SSLHelper is a class which permits to add the SSL Certificates
+    */
+
 	static public Connection getConnection(String url){
         return Jsoup.connect(url).sslSocketFactory(SSLHelper.socketFactory());
     }
@@ -46,7 +45,7 @@ public class SSLHelper {
     }
     
     /*
-     * FR - Cette classe est utilisée pour les connexions, c'est la gestion des certificats SSL.
+     * FR - Cette classe est utilisÃ©e pour les connexions, c'est la gestion des certificats SSL.
      * EN - This class is used for connections, it is the management of SSL certificates.
      */
     

@@ -31,13 +31,11 @@ public class resources {
 		Connection con = new MySqlConnection().getConnection();
 		
 		if (! externallinkslist.isEmpty()) {
-			logger.info("The event " + currentEventID + " has ressources ! Processing...");
 			for (Element lienu : externallinkslist) {
 				/*
-				 * FR - On teste si notre liste contient des liens, si oui, on exécute pour chaque lien la suite de la classe
+				 * FR - On teste si notre liste contient des liens, si oui, on exÃ©cute pour chaque lien la suite de la classe
 				 * EN - We test if our list contains links, if so, we run the rest of the class for each link
 				 */						
-				logger.info("=============== \nAnalyzing a ressource ! " + lienu.absUrl("href") + " Associated event ID : " + currentEventID);
 				
 				final Document docU = SSLHelper.getConnection(lienu.absUrl("href")).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(1000000).get();
 				ExternalLinks ext = new ExternalLinks(docU);
@@ -50,7 +48,7 @@ public class resources {
 				ArrayList<String> instaArray = ext.getInsta();
 				ArrayList<String> folderArray = ext.getDossier();
 				/*
-				 * FR - Connection à la page, et analyse + appel des méthodes de la classe ExternalLinks, pour retourner ce que contient le code HTML.
+				 * FR - Connection Ã  la page, et analyse + appel des mÃ©thodes de la classe ExternalLinks, pour retourner ce que contient le code HTML.
 				 * EN - Connection to the page, and analysis + call of the methods of the ExternalLinks class, to return what there is on the HTML
 				 */
 				
@@ -59,7 +57,7 @@ public class resources {
 				PreparedStatement psLien = con.prepareStatement(insertionlien);
 				psLien.setInt(1, currentEventID);
 				/*
-				 * FR - Préparation des insertions
+				 * FR - Prï¿½paration des insertions
 				 * EN - Preparation of insertions
 				 */
 				
@@ -81,16 +79,14 @@ public class resources {
 					psLienVide.setInt(1, currentEventID);
 					psLienVide.setString(2, lienu.absUrl("href"));
 					psLienVide.executeUpdate();
-					logger.info("The ressource " + lienu + " will be added without anything (nothing detected on the web page !)");
 					/*
 					 * FR - Si tout est vide, on insert dans la table ressources un lien sans rien.
 					 * EN - If everything is empty, we insert a link with nothing in the resources table.
 					 */	
 				} else {
-					logger.info("Things found on the web page ! Porcessing...");
 				if (isEmptyPDF == false) {	
 					/*
-					 * FR - Si l'arrayList PDF n'est pas vide, pour chaque lien dans cette ArrayList, on ajoute une entrée dans la table ressources
+					 * FR - Si l'arrayList PDF n'est pas vide, pour chaque lien dans cette ArrayList, on ajoute une entrÃ©e dans la table ressources
 					 * EN - If the PDF arrayList is not empty, for each link in this ArrayList, we add an entry in the resources table.
 					 */
 					PdfsTest.forEach((o) -> {
@@ -102,13 +98,12 @@ public class resources {
 						} catch (SQLException e) {
 							logger.error("SQL Error while PDF insert !" + e);
 						}
-						logger.info("The following will be added : " + o);
 						});	
 				}
 				
 				if (isEmptyVidDaily == false) {
 					/*
-					 * FR - Si l'arrayList VidDaily n'est pas vide, pour chaque lien dans cette ArrayList, on ajoute une entrée dans la table ressources
+					 * FR - Si l'arrayList VidDaily n'est pas vide, pour chaque lien dans cette ArrayList, on ajoute une entrÃ©e dans la table ressources
 					 * EN - If the VidDaily arrayList is not empty, for each link in this ArrayList, we add an entry in the resources table.
 					 */
 					vidDaily.forEach((o) -> {
@@ -120,14 +115,13 @@ public class resources {
 						} catch (SQLException e) {
 							logger.error("SQL Error while Dailymotion insert !" + e);
 						}
-						logger.info("The following will be added : " + o);
 						});	
 					
 				}
 				
 				if (isEmptyVidYtb == false) {
 					/*
-					 * FR - Si l'arrayList VidYtb n'est pas vide, pour chaque lien dans cette ArrayList, on ajoute une entrée dans la table ressources
+					 * FR - Si l'arrayList VidYtb n'est pas vide, pour chaque lien dans cette ArrayList, on ajoute une entrÃ©e dans la table ressources
 					 * EN - If the VidYtb arrayList is not empty, for each link in this ArrayList, we add an entry in the resources table.
 					 */
 					vidYtb.forEach((o) -> {
@@ -140,7 +134,6 @@ public class resources {
 							// TODO Auto-generated catch block
 							logger.error("SQL Error while Youtube insert !" + e);
 						}
-						logger.info("The following will be added : " + o);
 						});	
 				}
 				
@@ -157,7 +150,6 @@ public class resources {
 							psLien.setString(4, tex);
 						}
 					psLien.executeUpdate();
-					logger.info("Text added !");
 				}
 				
 				
@@ -177,7 +169,6 @@ public class resources {
 						logger.error("SQL Error while Image insert !" + e);
 					}
 					});
-					logger.info("Image(s) added !");
 				}
 				
 				if (isEmptyTwitterArray == false){
@@ -190,7 +181,6 @@ public class resources {
 					} catch (SQLException e) {
 						logger.error("SQL Error while twitter insert !" + e);
 					}
-					logger.info("The following will be added : " + n);
 					});		
 				}
 				}
@@ -206,7 +196,6 @@ public class resources {
 						logger.error("SQL Error while instagram insert !" + e);
 					}
 					
-					logger.info("The following will be added : " + n);
 					});		
 				}
 				
@@ -229,7 +218,6 @@ public class resources {
 						logger.error("FOLDER ERROR");
 					}
 				}
-				logger.info("=============== \nEnd of ressource analysis ! ");
 
 			}
 		}

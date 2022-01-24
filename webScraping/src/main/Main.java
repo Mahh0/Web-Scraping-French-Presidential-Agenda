@@ -8,7 +8,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.CombiningEvaluator.And;
-
 import init.ClearTablesAtProgramStartup;
 import init.MainLinks;
 import init.MySqlConnection;
@@ -16,7 +15,6 @@ import init.SSLHelper;
 import scraping.DataEnrichment;
 import scraping.EventsTimeManagements;
 import scraping.resources;
-
 import org.jsoup.select.Elements;
 import java.util.*;
 
@@ -26,19 +24,19 @@ public class Main {
 		logger.info("Starting the program");
 		Connection con = new MySqlConnection().getConnection();
 		/*
-		 * FR - Instantiation d'un connection con qui utilise getConnection dans la classe MySqlConnection. Cette instantiation est utilisée dans les classes dans lesquelles on souhaite utiliser la BDD
+		 * FR - Instantiation d'un connection con qui utilise getConnection dans la classe MySqlConnection. Cette instantiation est utilisï¿½e dans les classes dans lesquelles on souhaite utiliser la BDD
 		 * EN - Instantation of a Connection con that uses getConnection from MySqlConnection. It is used in the classes where we need interactions with the database
 		 */
 		
 		new ClearTablesAtProgramStartup();
 		/*
-		 * FR - Instantiation d'une classe qui permet de nettoyer les tables Sql à chaque début de programme (avec choix). 
+		 * FR - Instantiation d'une classe qui permet de nettoyer les tables Sql Ã  chaque dÃ©but de programme (avec choix). 
 		 * EN - Class to clear tables at the beginning of the program (with choice).
 		 */
 		
 		MainLinks links = new MainLinks();
 		/*
-		 * FR - Instantiation de la classe MainLinks qui s'occupe de la génération des liens à analyser. Elle retourne une ArrayList de liens.
+		 * FR - Instantiation de la classe MainLinks qui s'occupe de la gÃ©nÃ©ration des liens Ã  analyser. Elle retourne une ArrayList de liens.
 		 * EN - Instantiation of the MainLinks class which takes care of the generation of the links to analyze. It returns links ArrayList.
 		 */
 		
@@ -47,7 +45,7 @@ public class Main {
 			final Document doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).get();
 			/*
 			 * EN - For Each link in the ArrayList we create a document doc, and we run the rest of the program.
-			 * FR - Pour chaque lien dans l'ArrayList, on crée un document doc et on fait la suite du programme.
+			 * FR - Pour chaque lien dans l'ArrayList, on crÃ©e un document doc et on fait la suite du programme.
 			 */
 			
 			String date = doc.select(".h2--agenda").first().text();
@@ -59,13 +57,13 @@ public class Main {
 			String monthFormat = outputFormat.format(cal.getTime());
 			String year = splitter[1];
 			/* 
-			 * FR - Les précédentes lignes nous permettent de récupérer la date sur la page (format Mai 2017) par exemple, et d'en extraire l'année (format 2017 => year) et le mois au format nombre (05 => monthFormat).
+			 * FR - Les prÃ©cÃ©dentes lignes nous permettent de rÃ©cupÃ©rer la date sur la page (format Mai 2017) par exemple, et d'en extraire l'annÃ©e (format 2017 => year) et le mois au format nombre (05 => monthFormat).
 			 * EN - The previous lines permit us to get a date (format May 2017 for example), to split it in two to get May+2017, and to convert May to 05 (monthFormat). We also have the year
 			 */
 
 			Elements containers = doc.select("section.container > div.container--thicker");
 			/*
-			 * FR - Sélection de tous les conteneurs dans la page ( 1conteneur = 1 jour).
+			 * FR - SÃ©lection de tous les conteneurs dans la page ( 1conteneur = 1 jour).
 			 * EN - Select of all containers in the web page (1 container = 1 day)
 			 */
 			
@@ -83,9 +81,9 @@ public class Main {
 				 * 	- rows : it represents every lines, containing hour + kind of event + title
 				 *  - day : it is only the day (numeric) like 06, selected in the h3 sticker content, in the container
 				 *  
-				 *  Les deux lignes précédentes nous permettent, pour chaque conteneur d'avoir : 
-				 *  - rows : liste d'éléments (de lignes) qui contiennent l'heure, le type d'évènement et l'intitulé.
-				 *  - day : Sélection du jour en numérique (06).
+				 *  Les deux lignes prÃ©cÃ©dentes nous permettent, pour chaque conteneur d'avoir : 
+				 *  - rows : liste d'Ã©lÃ©ments (de lignes) qui contiennent l'heure, le type d'Ã©vÃ©nement et l'intitulÃ©.
+				 *  - day : SÃ©lection du jour en numÃ©rique (06).
 				 */
 
 				for (Element row : rows) {
@@ -93,32 +91,32 @@ public class Main {
 					 * EN - For each Element row (in Elements rows) -a row
 					 * FR - Pour chaque row (Elements rows)
 					 */
-					String eventhour = row.select("div.list-table__details > p.list-table__hour").text(); // On sélectionne l'heure
-					String eventtype = row.select("div.list-table__details > p.list-table__type").text(); // On sélectionne le type
-					String entitled = row.select("div.list-table__content > p.m-b-n").first().text(); // On sélectionne l'intitulé
-					Elements externallinkslist = row.select("a[href]"); // On sélectionne les liens
+					String eventhour = row.select("div.list-table__details > p.list-table__hour").text(); // On sÃ©lectionne l'heure
+					String eventtype = row.select("div.list-table__details > p.list-table__type").text(); // On sÃ©lectionne le type
+					String entitled = row.select("div.list-table__content > p.m-b-n").first().text(); // On sÃ©lectionne l'intitulÃ©
+					Elements externallinkslist = row.select("a[href]"); // On sÃ©lectionne les liens
 					/*
 					 * EN - In each row (containing hour + event kind + title), we can select theses things (eventhour, eventtype and entitled). Under each title, we can have 0, 1 or several links to analyse. externallinkslist contains these links
-					 * FR - Chaque ligne contient une heure (qui peut être au format HH:MM ou Après-Midi par exemple) => eventhour, un type => eventtype, un intitulé => entitled. En dessous de chaque intitulé, on a 0, 1 ou plusieurs liens qu'on va analyser. On les sélectionne dans externallistlinks
+					 * FR - Chaque ligne contient une heure (qui peut Ãªtre au format HH:MM ou AprÃ¨s-Midi par exemple) => eventhour, un type => eventtype, un intitulÃ© => entitled. En dessous de chaque intitulÃ©, on a 0, 1 ou plusieurs liens qu'on va analyser. On les sÃ©lectionne dans externallistlinks
 					 */
 					
 					String finaleventhour = eventhour.replaceAll("[^\\d.]", ":");
 					if(eventhour.equalsIgnoreCase("Matin")) {
 						finaleventhour="08:01";
-					} else if(eventhour.equalsIgnoreCase("Après-midi")) {
+					} else if(eventhour.equalsIgnoreCase("AprÃ¨s-midi")) {
 						finaleventhour="14:01";
-					} else if(eventhour.equalsIgnoreCase("Toute la journée")) {
+					} else if(eventhour.equalsIgnoreCase("Toute la journÃ©e")) {
 						finaleventhour="08:02";
 					}
 					/*
-					 * EN - put the eventhour in good format, and if it's "Après-Midi, Matin or Toute la journée" it put a special hour.
-					 * FR - Dans le cas ou la sélection de eventhour soit égale à une chaine de caractère type Après-Midi, Matin, ou toute la journée, on la remplace par une heure (01 ou 02 pour la reconnaitre).
+					 * EN - put the eventhour in good format, and if it's "AprÃ¨s-Midi, Matin or Toute la journÃ©e" it put a special hour.
+					 * FR - Dans le cas ou la sÃ©lection de eventhour soit Ã©gale Ã  une chaine de caractÃ¨res type AprÃ¨s-Midi, Matin, ou toute la journÃ©e, on la remplace par une heure (01 ou 02 pour la reconnaitre).
 					 */
 					
 					String eventstartdate = year + "-" + monthFormat + "-" + day + " " + finaleventhour + ":00";
 					/*
 					 * EN - This string is the datetime (duree) contained in the event table
-					 * FR - Composition de dated d'un évènement à partir des informations récoltées précédemment.
+					 * FR - Composition de dated d'un Ã©vÃ¨nement Ã  partir des informations rÃ©coltÃ©es prÃ©cÃ©demment.
 					 */
 					
 					final String insertionevent = "INSERT INTO evenement (dated,type,intitule) values (?,?,?)";
@@ -129,7 +127,7 @@ public class Main {
 	                    preparedStatementevent.executeUpdate();
 	                /*
 	                 * EN - Insertion of rows in evenement table, using PreparedStatement. We now have start date, type and entitled, we just need the duration.
-	                 * FR - Insertion de lignes dans evenement en utilisant PreparedStatement, avec les données récoltées précédemment. Il manque maintenant seulement la durée.
+	                 * FR - Insertion de lignes dans evenement en utilisant PreparedStatement, avec les donnÃ©es rÃ©coltÃ©es prÃ©cÃ©demment. Il manque maintenant seulement la durÃ©e.
 	                 */
 	                  
 	                final String getIdRequest = "SELECT id from evenement where dated = '" + eventstartdate + "'";
@@ -141,20 +139,20 @@ public class Main {
 	                }
 	                /*
 	                 * EN - Recovery of the ID of the event, for the duration of the previous event.
-	                 * FR - Lignes qui permettent de récupérer l'ID de l'évènement pour après calculer les durées.
+	                 * FR - Lignes qui permettent de rÃ©cupÃ©rer l'ID de l'Ã©vÃ©nement pour aprÃ¨s calculer les durÃ©es.
 	                 */
 	                
 	               DataEnrichment te = new DataEnrichment();
 	               te.typeEnrich(entitled, eventtype, currentEventID);
 	               /*
-	                * EN - Call of typeEnrich method in TypeEnrichment class (enrichissement de données).
-	                * FR - Instantiation et appel de la méthode typeEnrich de TypeEnrichment. Cela permet de faire de l'enrichissement de données au niveau des types d'évènement.
+	                * EN - Call of typeEnrich method in TypeEnrichment class (enrichissement de donnÃ©es).
+	                * FR - Instantiation et appel de la mÃ©thode typeEnrich de TypeEnrichment. Cela permet de faire de l'enrichissement de donnÃ©es au niveau des types d'Ã©vÃ©nements.
 	                */
 	               
 	               te.personnalitesEnrich(entitled, currentEventID);
 	               /*
 	                * EN - Call of personnalitesEnrich method in TypeEnrichment class to add persons to personnes table
-	                * FR - Appel de la méthode personnalitesEnrich qui s'occupe d'ajouter des personnes à des évènements liés.
+	                * FR - Appel de la mÃ©thode personnalitesEnrich qui s'occupe d'ajouter des personnes Ã  des Ã©vÃ©nements liÃ©s.
 	                */
 	               
 	                
@@ -168,30 +166,28 @@ public class Main {
 	                	LastEventDate = to.getString(1);
 	                }
 	                /*
-	                 * FR - Sélection de la dated de l'évènement précédent à l'aide de l'idActuel-1
+	                 * FR - SÃ©lection de la dated de l'Ã©vÃ©nement prÃ©cÃ©dent Ã  l'aide de l'idActuel-1
 	                 * EN - Selection of the previous event dated thanks to currentEventID-1
 	                 */
 	                
 	                final String updateeven = "UPDATE evenement SET duree = ? WHERE id= ? ";
 	        		EventsTimeManagements etms = new EventsTimeManagements(LastEventDate, eventstartdate);
 	        		String timeformat = etms.CalculDurees();
-	                PreparedStatement pSduree = con.prepareStatement(updateeven); // Ce statement et ce qui suit permet d'insérer la durée calculée précédemment dans la table
+	                PreparedStatement pSduree = con.prepareStatement(updateeven); // Ce statement et ce qui suit permet d'insÃ©rer la durÃ©e calculÃ©e prÃ©cÃ©demment dans la table
 	                pSduree.setString(1, timeformat);
 	                pSduree.setInt(2, previousEventID);
 	                pSduree.executeUpdate();
 	                /*
-	                 * FR - Ajout de la durée de l'évènement précédent à l'aide d'un preparedStatement et d'une instantiation de la classe EventTimeManagement.
+	                 * FR - Ajout de la durÃ©e de l'Ã©vÃ©nement prÃ©cÃ©dent Ã  l'aide d'un preparedStatement et d'une instantiation de la classe EventTimeManagement.
 	                 * EN - addition of event duration thanks to preparedStatement and instantiation of EventTimeManagement class.
 	                 */
-	            
-	                logger.info("======================================= Datetime evenement : " + eventstartdate + "\n" + "type évènement : " + eventtype + "\nIntitulé : " + entitled + "\nDate évènement précédent : " + LastEventDate + "\nDurée event précédent : " + timeformat + "\nId evenement: " + currentEventID + "\n");
+	                
 	                resources gestionRessources = new resources();
 	                gestionRessources.insertionresources(externallinkslist, currentEventID);
 	                /*
 	                 * EN - Everything related to resources table (external links) was made in gestionRessources class
-	                 * FR - Tous les liens externes sont analysés dans gestionRessources.insertionRessources. Il prend les listes des liens externes et l'id de l'event actuel en paramètre.
+	                 * FR - Tous les liens externes sont analysÃ©s dans gestionRessources.insertionRessources. Il prend les listes des liens externes et l'id de l'event actuel en paramÃ¨tre.
 	                 */
-	                logger.info("======================================= End of event");
 				}
 			}
 		} 

@@ -12,15 +12,12 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class MainLinks {
 	/*
 	 * EN - This class creates the links for the analysis of the presidential agenda. It creates only the links needed, thanks to mySql connection.
-	 * FR - Cette classe crée les liens à analyser. Elle crée seulement lesl iens nécéssaires.
+	 * FR - Cette classe crÃ©e les liens Ã  analyser. Elle crÃ©e seulement les liens nÃ©cÃ©ssaires.
 	 */
-	private static Logger logger = LogManager.getLogger(MainLinks.class);
 
 	public ArrayList<String> AnalyseLiens() throws ParseException, SQLException {
 		Connection con = new MySqlConnection().getConnection();
@@ -30,13 +27,13 @@ public class MainLinks {
 		SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
 
 		ArrayList<String> months = new ArrayList<String>();
-		List<String> listeMois = Arrays.asList("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
+		List<String> listeMois = Arrays.asList("janvier", "fÃ©vrier", "mars", "avril", "mai", "juin", "juillet", "aoÃ»t", "septembre", "octobre", "novembre", "dÃ©cembre");
 		months.addAll(listeMois);
 			
 		Hashtable<String, Integer> numbers = new Hashtable<String, Integer>();
 		ArrayList<String> liens = new ArrayList<String>();
 		/*
-		 * FR - l'ArrayList months contient les mois, la Hashtable numbers va contenir les années, et l'ArrayList liens, les liens qui seront retournés.
+		 * FR - l'ArrayList months contient les mois, la Hashtable numbers va contenir les annÃ©es, et l'ArrayList liens, les liens qui seront retournÃ©s.
 		 * EN - The ArrayList months contains the months, the Hashtable numbers will contain the years, and the ArrayList links, the links that will be returned.
 		 */
 		
@@ -49,13 +46,13 @@ public class MainLinks {
 			String test = String.valueOf(i);
 			numbers.put(test, i);
 			/*
-			 * Traitements concernant l'année pour l'avoir en STRING et en INT.
-			 * On a ici une première boucle pour chaque année de 2017 jusqu'à année actuelle
+			 * Traitements concernant l'annï¿½e pour l'avoir en STRING et en INT.
+			 * On a ici une premiï¿½re boucle pour chaque annï¿½e de 2017 jusqu'ï¿½ annï¿½e actuelle
 			 */
 
 			for (String currentmonth : months) {
 				if (e != 11) { e++; } else { e = 0; }
-				if (currentmonth == "décembre" && numbers.get(test) == i) { i3 = i + 1; } else { i3 = i; }
+				if (currentmonth == "dÃ©cembre" && numbers.get(test) == i) { i3 = i + 1; } else { i3 = i; }
 
 				String nextmonth = months.get(e);
 
@@ -76,15 +73,14 @@ public class MainLinks {
 					nb = res.getInt("COUNT(*)");
 				}
 				/*
-				 * FR - Comptage du nombre d'entrées du prochain moins dans la base de données
+				 * FR - Comptage du nombre d'entrÃ©es du prochain moins dans la base de donnÃ©es
 				 * EN - Count the number of entries for the next month in the database
 				 */
 
 				
 				if (nb == 0) {
-					if (numbers.get(test) == 2017 && (currentmonth == "janvier" || currentmonth == "février" || currentmonth == "mars" || currentmonth == "avril")) {
+					if (numbers.get(test) == 2017 && (currentmonth == "janvier" || currentmonth == "fÃ©vrier" || currentmonth == "mars" || currentmonth == "avril")) {
 					} else {
-					logger.info("Adding " + currentmonthnormalized + "-" + numbers.get(test) + " to list (" + nextmonthnormalized + i3 + " = 0)" );
 					liens.add("http://www.elysee.fr/agenda-" + currentmonthnormalized + "-" + numbers.get(test)); // we add the link to the table
 					
 					String deleteReq = "DELETE re FROM evenement ev JOIN ressources re ON re.idTable=ev.id WHERE ev.dated > '"
@@ -105,15 +101,15 @@ public class MainLinks {
 					
 					}
 				/*
-				 * FR - Si le prochain mois contient aucune entrée (nb ==0) on fait l'action B sinon si il contient des entrées, on fait rien sur ce mois et la suite
-				 * Action B : Ajout du lien et suppression de toutes les entrées à partir du mois actuel
-				 * 		+ si le mois généré c'est janvier/février/mars/avril 2017 on ne l'ajoute pas
+				 * FR - Si le prochain mois contient aucune entrÃ©e (nb ==0) on fait l'action B sinon si il contient des entrÃ©es, on fait rien sur ce mois et la suite
+				 * Action B : Ajout du lien et suppression de toutes les entrÃ©es Ã  partir du mois actuel
+				 * 		+ si le mois gÃ©nÃ©rÃ© c'est janvier/fÃ©vrier/mars/avril 2017 on ne l'ajoute pas
 				 */		
 				} 
 			}
 			
 		/*
-		 * FR - Pour chaque années (jusqu'à l'année actuelle) et pour chaque mois, on génère un lien d'un mois SEULEMENT si le mois suivant ne contient pas d'entrées. S'il en contient toutes les entrées des prochains mois sont supprimées.
+		 * FR - Pour chaque annÃ©es (jusqu'Ã  l'annÃ©e actuelle) et pour chaque mois, on gÃ©nÃ¨re un lien d'un mois SEULEMENT si le mois suivant ne contient pas d'entrÃ©es. S'il en contient toutes les entrÃ©es des prochains mois sont supprimÃ©es.
 		 * EN - For each year (up to the current year) and for each month, a one-month link is generated ONLY if the following month does not contain entries. If it contains any entries for the next few months are deleted.
 		 */
 

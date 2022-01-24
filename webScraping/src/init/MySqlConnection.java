@@ -27,7 +27,7 @@ public class MySqlConnection {
 	    return con;
 	    
 	    /*
-	     * FR - Connexion à la base de données
+	     * FR - Connexion Ã  la base de donnÃ©es
 	     * EN - Connection to the database
 	     */
 	    }

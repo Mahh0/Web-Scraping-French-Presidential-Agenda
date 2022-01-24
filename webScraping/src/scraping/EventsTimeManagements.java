@@ -1,10 +1,8 @@
 package scraping;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Element;
@@ -12,7 +10,7 @@ import org.jsoup.select.Elements;
 
 public class EventsTimeManagements {
 	/*
-	 * FR - Cette classe gère la durée des évènements. Elle prend en paramètre la date d'un évènement et la date de l'évènement précédent.
+	 * FR - Cette classe gÃ¨re la durÃ©e des Ã©vÃ©nements. Elle prend en paramÃ¨tre la date d'un Ã©vÃ©nement et la date de l'Ã©vÃ©nement prÃ©cÃ©dent.
 	 * EN - This class manages the duration of events. It takes as a parameter the date of an event and the date of the previous event.
 	 */
 	private static Logger logger = LogManager.getLogger(EventsTimeManagements.class);
@@ -45,7 +43,7 @@ public class EventsTimeManagements {
 		        heureEvtPrecedent = HeureEvent.parse(stringHeureEventPrecedent);
 		        heureEvtActuel = HeureEvent.parse(stringHeureEventActuel);
 		        /*
-		         * FR - Pour faire les calculs, on récupère seulement les heures en enlevant les jours
+		         * FR - Pour faire les calculs, on rÃ©cupÃ¨re seulement les heures en enlevant les jours
 		         * Sortie : heureEvtPrecedent (Date) et heureEvtActuel (Date)
 		         * jourEventPrecedent et jourEventActuel : strings pour comparer les jours
 		         * 
@@ -65,11 +63,11 @@ public class EventsTimeManagements {
             resultat = dateEventActuel.getTime() - dateEventPrecedent.getTime();
         }
         /*
-         * FR - Si les deux évènements comparés sont sur le même jour, on fait une simple soustraction des dates complètes
+         * FR - Si les deux Ã©vÃ©nements comparÃ©s sont sur le mÃªme jour, on fait une simple soustraction des dates complÃ¨tes
          * EN - If the two compared events are on the same day, we do a simple subtraction of the complete dates
          */
         
-        else if (jourEventPrecedent != jourEventActuel) // sinon si les evenements comparés ne sont pas le même jour
+        else if (jourEventPrecedent != jourEventActuel) // sinon si les evenements comparÃ©s ne sont pas le mÃªme jour
         	{
             if (heureEvtPrecedent.getTime() >= huit.getTime() && heureEvtPrecedent.getTime() < douze.getTime()) {
         		resultat = douze.getTime() -  heureEvtPrecedent.getTime();
@@ -90,7 +88,7 @@ public class EventsTimeManagements {
             }
         }
         /*
-         * FR - Cette série de tests s'applique dans le cas ou les deux évènements ne sont pas le même jour, on fait des calculs à l'aide de créneaux :
+         * FR - Cette sÃ©rie de tests s'applique dans le cas ou les deux Ã©vÃ¨nements ne sont pas le meme jour, on fait des calculs Ã  l'aide de crÃ©neaux :
          * EN - This series of tests applies in the case where the two events are not the same day, we make calculations using time slots :
          * 
          * 8h-12h 12h-13h 13h-18h 18h-20h 20h-00h
@@ -102,7 +100,7 @@ public class EventsTimeManagements {
         	logger.error("Error for event duration ! Look the event with " + toa);
         }
         /*
-         * A supprimer (resoudre problemes), si la duree (resultat) est inferieure à 0, on met 1000 par defaut).
+         * A supprimer (resoudre problemes), si la duree (resultat) est inferieure Ã  0, on met 1000 par defaut).
          */
         
         

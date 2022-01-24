@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 public class ClearTablesAtProgramStartup {
 	/*
-	 * FR - Cette classe instantie une connexion SQL, demande à l'utilisateur s'il veut clear les tables SQL, si l'utilisateur répond oui, on supprime ce que contient les deux tables et reset l'auto-increment.
+	 * FR - Cette classe instantie une connexion SQL, demande Ã  l'utilisateur s'il veut clear les tables SQL, si l'utilisateur rÃ©pond oui, on supprime ce que contient les deux tables et reset l'auto-increment.
 	 * EN - This class asks to the user if he want's to clear the tables, if the answer is 'y' the 2 tables are cleared and auto-increment is reset. 
 	 */
 	private static Logger logger = LogManager.getLogger(ClearTablesAtProgramStartup.class);
