@@ -3,6 +3,7 @@ package scraping;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ import org.jsoup.select.Elements;
 import init.MySqlConnection;
 import init.SSLHelper;
 
-public class resources {
+public class resources_bdd {
 	Elements externallinkslist;
 	int currentEventID;
 
@@ -24,7 +25,7 @@ public class resources {
 		 * FR - Cette classe s'occupe des insertions dans la table ressources.
 		 * EN - This class takes care of the insertions in the resources table.
 		 */
-		Logger logger = LogManager.getLogger(resources.class);
+		Logger logger = LogManager.getLogger(resources_bdd.class);
 
 		this.externallinkslist = externallinkslist;
 		this.currentEventID = currentEventID;
@@ -38,7 +39,7 @@ public class resources {
 				 */						
 				
 				final Document docU = SSLHelper.getConnection(lienu.absUrl("href")).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(1000000).get();
-				ExternalLinks ext = new ExternalLinks(docU);
+				resources_scraping ext = new resources_scraping(docU);
 				ArrayList<String> PdfsTest = ext.getPdf();
 				ArrayList<String> vidYtb = ext.getVidYtb();
 				ArrayList<String> vidDaily = ext.getVidDaily();
@@ -172,6 +173,10 @@ public class resources {
 				}
 				
 				if (isEmptyTwitterArray == false){
+					/*
+					 * FR - Si l'arrayList des liens twitter n'est pas vide, on procède à l'insertion pour chaque lien de l'ArrayList.
+					 * EN - If twitter links ArrayList is not empty, we insert for each links of the ArrayList.
+					 */
 					TwitterArray.forEach((n) -> {
 					try {
 						psLien.setString(2, lienu.absUrl("href"));
@@ -186,6 +191,10 @@ public class resources {
 				}
 				
 				if (isEmptyinstaArray == false){
+					/*
+					 * FR - Si l'arrayList des liens insta n'est pas vide, on procède à l'insertion pour chaque lien de l'ArrayList.
+					 * EN - If insta links ArrayList is not empty, we insert for each links of the ArrayList.
+					 */
 					instaArray.forEach((n) -> {
 					try {
 						psLien.setString(2, lienu.absUrl("href"));
@@ -200,27 +209,77 @@ public class resources {
 				}
 				
 				if (isEmptyfolderArray == false){
+					// Insertion des dossiers 
+
 					int fSize = folderArray.size();	
 					logger.debug("FOLDER ARRAY SIZE :" + fSize);
-					
-					if (fSize == 2) {
-						final String insertiondossier = "INSERT INTO dossier(lien) values (?)";
-						PreparedStatement insertdossier = con.prepareStatement(insertiondossier);
-						insertdossier.setString(1, folderArray.get(1));
+						for (int i = 1; i<=fSize;i++) {
+							// Pour chaque lien de dossier dans l'ArrayList
+
+
+							// Comptage du nombre de dossiers dans la table dossier avec ce même lien
+						int compteur = 0;
+						PreparedStatement countDossier = con.prepareStatement("SELECT COUNT(*) FROM dossier WHERE lien=(?)");
+						countDossier.setString(1, folderArray.get(i-1));
+						ResultSet st1 = countDossier.executeQuery();
+						
+						while (st1.next()) {
+							compteur = st1.getInt(1);
+						 }
+						 
+
+						 if (compteur == 0){ // Si dans la table, aucune ligne ne comporte ce dossier (jamais créé)
+							int compteur2 = 0;
+						// On fait l'insertion dans dossier
+						PreparedStatement insertdossier = con.prepareStatement("INSERT INTO dossier(lien) values (?)");
+						insertdossier.setString(1, folderArray.get(i-1));
 						insertdossier.executeUpdate();
-					} else if (fSize == 3) {
-						final String insertiondossier2 = "INSERT INTO dossier(lien, intitule) values (?, ?)";
-						PreparedStatement insertdossier2 = con.prepareStatement(insertiondossier2);
-						insertdossier2.setString(1, folderArray.get(1));
-						insertdossier2.setString(2, folderArray.get(2));
-						insertdossier2.executeUpdate();
-					} else {
-						logger.error("FOLDER ERROR");
+
+						// On récupère l'ID de la requête précédente
+						final String recupId = "SELECT id from dossier WHERE lien=(?)";
+						PreparedStatement recupIdR = con.prepareStatement(recupId);
+						recupIdR.setString(1, folderArray.get(i-1));
+						ResultSet stIdR = recupIdR.executeQuery();
+						while (stIdR.next()) {
+							compteur2 = stIdR.getInt(1);
+						 }
+						 
+						 // On set dans ressource l'idDossier avec l'ID Précédent
+						PreparedStatement updateRess2 = con.prepareStatement("UPDATE ressources SET idDossier = (?) WHERE url = (?)");
+						updateRess2.setInt(1, compteur2);
+						updateRess2.setString(2, lienu.absUrl("href"));
+						updateRess2.executeUpdate();
+
+
+						 } else if (compteur != 0) { // Un dossier avec ce lien a déjà été inséré
+							int compteur2 = 0;
+							logger.debug("le compteur != 0");
+						// On récupère l'ID du dossier (de la requete count)
+						final String selectIdFolder = "SELECT id from dossier WHERE lien=(?)";
+						PreparedStatement recupIdRc = con.prepareStatement(selectIdFolder);
+						recupIdRc.setString(1, folderArray.get(i-1));
+						logger.debug("requete : " + recupIdRc);
+						ResultSet stIdc = recupIdRc.executeQuery();
+						logger.debug("resultatset : " + stIdc);
+						while (stIdc.next()) {
+							compteur2 = stIdc.getInt(1);
+						 }
+						 
+						// On fait un update dans ressource avec cet ID
+						PreparedStatement updateRess2 = con.prepareStatement("UPDATE ressources SET idDossier = (?) WHERE url = (?)");
+						updateRess2.setInt(1, compteur2);
+						updateRess2.setString(2, lienu.absUrl("href"));
+						updateRess2.executeUpdate();
+
+						 } else {
+						logger.error("ERROR");
 					}
 				}
 
 			}
 		}
 	}
-	}
+}
+}
+
 

@@ -14,7 +14,7 @@ import init.MySqlConnection;
 import init.SSLHelper;
 import scraping.DataEnrichment;
 import scraping.EventsTimeManagements;
-import scraping.resources;
+import scraping.resources_bdd;
 import org.jsoup.select.Elements;
 import java.util.*;
 
@@ -182,7 +182,7 @@ public class Main {
 	                 * EN - addition of event duration thanks to preparedStatement and instantiation of EventTimeManagement class.
 	                 */
 	                
-	                resources gestionRessources = new resources();
+	                resources_bdd gestionRessources = new resources_bdd();
 	                gestionRessources.insertionresources(externallinkslist, currentEventID);
 	                /*
 	                 * EN - Everything related to resources table (external links) was made in gestionRessources class

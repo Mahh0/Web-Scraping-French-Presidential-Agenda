@@ -21,11 +21,13 @@ public class ClearTablesAtProgramStartup {
 
 		if (str.contains("y")) {
 				try {
+					PreparedStatement dl0 = con.prepareStatement("delete from dossier");
 					PreparedStatement dl1 = con.prepareStatement("delete from ressources");
 					PreparedStatement dl2 = con.prepareStatement("delete from personne");
 					PreparedStatement dl3 = con.prepareStatement("delete from evenement");
 					PreparedStatement dl4 = con.prepareStatement("ALTER TABLE evenement AUTO_INCREMENT = 1");
 					dl1.executeUpdate();
+					dl0.executeUpdate();
 					dl2.executeUpdate();
 					dl3.executeUpdate();
 					dl4.executeUpdate();

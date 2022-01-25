@@ -7,15 +7,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class ExternalLinks {
+public class resources_scraping {
 	Document doc;
-	private static Logger logger = LogManager.getLogger(ExternalLinks.class);
+	private static Logger logger = LogManager.getLogger(resources_scraping.class);
 	/*
 	 * FR - La classe ExternalLinks prend en paramètre un document (code HTML) et l'analyse pour la table ressources.
 	 * EN - The ExternalLinks class takes a document (HTML code) as a parameter and analyzes it for ressources table.
 	 */
 
-	public ExternalLinks(Document doc) {
+	public resources_scraping(Document doc) {
 		this.doc = doc;
 	}
 	
@@ -150,7 +150,7 @@ public class ExternalLinks {
 		  			if (casesingle !=null) { // Si sélection réussie, ...
 		 				System.out.println("y'a un lien !");
 						Element url = casesingle.select(".folder-link-content-title").first();
-		 				dossiers.add(casesingle.select(".folder-link-content-title > span").text());
+		 				// dossiers.add(casesingle.select(".folder-link-content-title > span").text());
 		 				dossiers.add(url.absUrl("href"));
 		  			} else { // Sinon, c'est un conteneur contant plusieurs dossiers ...
 						Element casedouble = conteneurdossier.select(".folder-link.folder-link--multiple").first();
@@ -160,7 +160,6 @@ public class ExternalLinks {
 						for (Element li : lis){
 							dossiers.add("https://www.elysee.fr" + li.attr("href"));
 						}
-						dossiers.add("debug");
 						}
 		}
 	}

@@ -111,7 +111,6 @@ public class EventsTimeManagements {
         	    TimeUnit.MILLISECONDS.toHours(diffrence),
         	    TimeUnit.MILLISECONDS.toMinutes(diffrence) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(diffrence)),
         	    TimeUnit.MILLISECONDS.toSeconds(diffrence) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(diffrence)));
-        logger.info("The previous event duration will be : " + timeformat + " minutes");
         return timeformat;
         /*
          * FR - Conversion de resultat qui est en Millisecondes, en un format HH:mm:ss.
