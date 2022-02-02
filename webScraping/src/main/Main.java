@@ -11,6 +11,7 @@ import org.jsoup.select.CombiningEvaluator.And;
 import init.ClearTablesAtProgramStartup;
 import init.MainLinks;
 import init.MySqlConnection;
+import init.ReadPropertyFile;
 import init.SSLHelper;
 import scraping.DataEnrichment;
 import scraping.EventsTimeManagements;
@@ -20,12 +21,19 @@ import java.util.*;
 
 public class Main {
 	private static Logger logger = LogManager.getLogger(Main.class);
+	
 	public static void main(String[] args) throws Exception {
 		logger.info("Starting the program");
+		
+		MySqlConnection.setParameters();
+		/*
+		 * Calling setParameters method from MySqlConnection which will set database parameters : user, pw, url, ... using config.properties file
+		*/
+
 		Connection con = new MySqlConnection().getConnection();
 		/*
-		 * FR - Instantiation d'un connection con qui utilise getConnection dans la classe MySqlConnection. Cette instantiation est utilis�e dans les classes dans lesquelles on souhaite utiliser la BDD
 		 * EN - Instantation of a Connection con that uses getConnection from MySqlConnection. It is used in the classes where we need interactions with the database
+		 * It uses ReadPropertyFile methods values.
 		 */
 		
 		new ClearTablesAtProgramStartup();
