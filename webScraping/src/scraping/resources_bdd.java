@@ -30,6 +30,10 @@ public class resources_bdd {
 		this.externallinkslist = externallinkslist;
 		this.currentEventID = currentEventID;
 		Connection con = new MySqlConnection().getConnection();
+
+		
+
+		
 		
 		if (! externallinkslist.isEmpty()) {
 			for (Element lienu : externallinkslist) {
@@ -56,6 +60,7 @@ public class resources_bdd {
 				
 				final String insertionlien = "INSERT INTO ressources (idTable, url, categorie, contenu) values (?,?,?,?)";
 				PreparedStatement psLien = con.prepareStatement(insertionlien);
+			
 				psLien.setInt(1, currentEventID);
 				/*
 				 * FR - Pr�paration des insertions
@@ -280,8 +285,11 @@ public class resources_bdd {
 			psLien.close();
 		}
 		}
+	} 
+
+		
 	}
 }
-}
+
 
 
