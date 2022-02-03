@@ -80,6 +80,7 @@ public class resources_bdd {
 					psLienVide.setInt(1, currentEventID);
 					psLienVide.setString(2, lienu.absUrl("href"));
 					psLienVide.executeUpdate();
+					psLienVide.close();
 					/*
 					 * FR - Si tout est vide, on insert dans la table ressources un lien sans rien.
 					 * EN - If everything is empty, we insert a link with nothing in the resources table.
@@ -188,7 +189,6 @@ public class resources_bdd {
 					}
 					});		
 				}
-				}
 				
 				if (isEmptyinstaArray == false){
 					/*
@@ -277,6 +277,8 @@ public class resources_bdd {
 				}
 
 			}
+			psLien.close();
+		}
 		}
 	}
 }
