@@ -32,21 +32,12 @@ public class ClearTablesAtProgramStartup {
 					dl3.executeUpdate();
 					dl4.executeUpdate();
 					con.close();
-				
 					logger.info("Database cleaned !");
 					
 				} catch (Exception e) {
 					logger.error("Error while cleaning tables ! " + e);
-				} 
-
-				
-
-				
-				
-			
-		} else {
-			logger.info("Database not cleaned !");
-		}
+				}
+				}
 	}
 }
 

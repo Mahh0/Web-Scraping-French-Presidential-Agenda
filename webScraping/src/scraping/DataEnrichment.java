@@ -121,6 +121,7 @@ public class DataEnrichment {
 				} if (m.find()) {
 					preparedStatementug.setString(2, "Cérémonie");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {	
 						p = Pattern.compile("^(Visite )");
 						m = p.matcher(entitled);
@@ -183,6 +184,7 @@ public class DataEnrichment {
 	            perso.setString(3, splitter[1]);
 	            perso.setString(4, nom);
 	            perso.executeUpdate();
+				perso.close();
 		        } catch (SQLException e) {
 		        	logger.error("Error while personnality insert !");
 		        }

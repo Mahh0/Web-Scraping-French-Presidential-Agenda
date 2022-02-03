@@ -1,7 +1,10 @@
 package main;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.FileUtils;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import org.jsoup.Jsoup;
@@ -15,6 +18,7 @@ import init.ReadPropertyFile;
 import init.SSLHelper;
 import scraping.DataEnrichment;
 import scraping.EventsTimeManagements;
+import scraping.docToLocalHtml;
 import scraping.resources_bdd;
 import org.jsoup.select.Elements;
 import java.util.*;
@@ -34,11 +38,16 @@ public class Main {
 
 		Connection con = new MySqlConnection().getConnection();
 		/*
-		 * EN - Instantation of a Connection con that uses getConnection from MySqlConnection. It is used in the classes where we need interactions with the database
+		 * Instantation of a Connection con that uses getConnection from MySqlConnection. It is used in the classes where we need interactions with the database
 		 * It uses ReadPropertyFile methods values.
 		 */
-		
-		new ClearTablesAtProgramStartup();
+
+		 logger.debug("AskForCleanup => " + ReadPropertyFile.getAskforcleanup());
+		 if (ReadPropertyFile.getAskforcleanup().equals("yes")) {
+			logger.info("Asking for database clearing, press yes or no.");
+			new ClearTablesAtProgramStartup();
+		 }
+
 		/*
 		 * FR - Instantiation d'une classe qui permet de nettoyer les tables Sql à chaque début de programme (avec choix). 
 		 * EN - Class to clear tables at the beginning of the program (with choice).
@@ -53,6 +62,9 @@ public class Main {
 		for(Object link : links.AnalyseLiens()) {
 			logger.info("----------------------------------------------------------- Analyzing " + link);
 			final Document doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).get();
+			
+			docToLocalHtml.downloadPage(doc.outerHtml(), link.toString());
+
 			/*
 			 * EN - For Each link in the ArrayList we create a document doc, and we run the rest of the program.
 			 * FR - Pour chaque lien dans l'ArrayList, on crée un document doc et on fait la suite du programme.
@@ -136,6 +148,7 @@ public class Main {
 	                    preparedStatementevent.setString(3, entitled);
 	                    preparedStatementevent.executeUpdate();
 						preparedStatementevent.close();
+
 	                /*
 	                 * EN - Insertion of rows in evenement table, using PreparedStatement. We now have start date, type and entitled, we just need the duration.
 	                 * FR - Insertion de lignes dans evenement en utilisant PreparedStatement, avec les données récoltées précédemment. Il manque maintenant seulement la durée.
@@ -148,7 +161,8 @@ public class Main {
 	                if (a.next()) {
 	                	currentEventID = a.getInt(1);
 	                }
-					
+					getId.close();
+
 	                /*
 	                 * EN - Recovery of the ID of the event, for the duration of the previous event.
 	                 * FR - Lignes qui permettent de récupérer l'ID de l'événement pour après calculer les durées.
@@ -177,6 +191,7 @@ public class Main {
 	                if(to.next()) {
 	                	LastEventDate = to.getString(1);
 	                }
+					derniereDate.close();
 	                /*
 	                 * FR - Sélection de la dated de l'événement précédent à l'aide de l'idActuel-1
 	                 * EN - Selection of the previous event dated thanks to currentEventID-1
@@ -189,7 +204,8 @@ public class Main {
 	                pSduree.setString(1, timeformat);
 	                pSduree.setInt(2, previousEventID);
 	                pSduree.executeUpdate();
-					preparedStatementevent.close();
+					pSduree.close();
+					
 	                /*
 	                 * FR - Ajout de la durée de l'événement précédent à l'aide d'un preparedStatement et d'une instantiation de la classe EventTimeManagement.
 	                 * EN - addition of event duration thanks to preparedStatement and instantiation of EventTimeManagement class.

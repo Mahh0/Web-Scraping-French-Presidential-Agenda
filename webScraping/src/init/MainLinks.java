@@ -72,6 +72,7 @@ public class MainLinks {
 				while (res.next()) {
 					nb = res.getInt("COUNT(*)");
 				}
+				countPs.close();
 				/*
 				 * FR - Comptage du nombre d'entrées du prochain moins dans la base de données
 				 * EN - Count the number of entries for the next month in the database
@@ -96,6 +97,8 @@ public class MainLinks {
 					PreparedStatement psE2 = con.prepareStatement(deleteReq2);
 					psE.executeUpdate();
 					psE2.executeUpdate();
+					psE.close();
+					psE2.close();
 					}
 					
 					
