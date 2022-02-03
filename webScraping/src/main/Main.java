@@ -1,12 +1,13 @@
 package main;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.FileUtils;
+import java.text.DateFormatSymbols;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
+import java.time.Month;
+import java.time.format.TextStyle;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -58,11 +59,9 @@ public class Main {
 		 */
 		
 		for(Object link : links.AnalyseLiens()) {
-			logger.info("----------------------------------------------------------- Analyzing " + link);
+			logger.info("----------------------------------------------------------- Analyzing " + link);			
 			final Document doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).get();
 			
-			docToLocalHtml.downloadPage(doc.outerHtml(), link.toString());
-
 			/*
 			 * EN - For Each link in the ArrayList we create a document doc, and we run the rest of the program.
 			 * FR - Pour chaque lien dans l'ArrayList, on crée un document doc et on fait la suite du programme.
@@ -80,6 +79,28 @@ public class Main {
 			 * FR - Les précédentes lignes nous permettent de récupérer la date sur la page (format Mai 2017) par exemple, et d'en extraire l'année (format 2017 => year) et le mois au format nombre (05 => monthFormat).
 			 * EN - The previous lines permit us to get a date (format May 2017 for example), to split it in two to get May+2017, and to convert May to 05 (monthFormat). We also have the year
 			 */
+
+
+			
+			 String montfmt = Month.of(Integer.parseInt(monthFormat)).getDisplayName(TextStyle.FULL_STANDALONE, Locale.FRANCE);
+			 String normalized = Normalizer.normalize(montfmt, Normalizer.Form.NFD);
+			 String accentRemoved = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+			if (link.toString()!= "http://www.elysee.fr/agenda-" + accentRemoved + "-" + year) { // while the link is not equal to current month
+				try {
+				docToLocalHtml.downloadPage(doc.outerHtml(), link.toString()); // download the page
+				} catch (Exception e) {
+					logger.error("Error while downloading the page" + accentRemoved + year);
+				}
+			}
+			/*
+			* Downloading each page, to use it if wanted (this avoids making too much requests to the website)
+			*/
+			
+
+			/*
+			* While the link is not the actual one, we can download the page thanks to downloadPage method from docToLocalHTML.
+			* Then we can use it for the scraping instead of 
+			*/
 
 			Elements containers = doc.select("section.container > div.container--thicker");
 			/*

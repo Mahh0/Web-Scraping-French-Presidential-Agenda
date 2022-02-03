@@ -1,6 +1,10 @@
 package scraping;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,10 +23,16 @@ public class docToLocalHtml {
         Matcher mYear = pYear.matcher(link);
 
   
+        // webScraping/src/main/resources/htmlAgenda/html-" + mMonth.group(0) + "-" + mYear.group(0));
         if (mMonth.find() && mYear.find()) {
-        try (PrintWriter out = new PrintWriter("webScraping/src/main/resources/html-" + mMonth.group(0) + "-" + mYear.group(0))) {
-            out.println(outerHtml);
+            
+            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("webScraping/src/main/resources/htmlAgenda/html-" + mMonth.group(0) + "-" + mYear.group(0)), "UTF-8"));
+                try {
+                    out.write(outerHtml);
+                } finally {
+                    out.close();
+                }
         }
     }
     }
-}
+
