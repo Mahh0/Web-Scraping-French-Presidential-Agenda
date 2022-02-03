@@ -43,24 +43,28 @@ public class DataEnrichment {
 				if(m.find()) {
 					preparedStatementug.setString(2, "Entretien");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 				p = Pattern.compile("^(Conseil des (m|M)inistres)");
 				m = p.matcher(entitled);
 				} if (m.find()) {
 					preparedStatementug.setString(2, "Conseil des ministres");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 				p = Pattern.compile("^((Conseil de (d|D)éfense|Conseil restreint de (d|D)éfense))");
 				m = p.matcher(entitled);
 				} if(m.find()) {
 					preparedStatementug.setString(2, "Conseil de défense");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 				p = Pattern.compile("^(Conseil européen)");
 				m = p.matcher(entitled);
 				} if (m.find()) {
 					preparedStatementug.setString(2, "Conseil européen");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else { 
 				p = Pattern.compile("^(Déplacement )");
 				m= p.matcher(entitled);
@@ -68,6 +72,7 @@ public class DataEnrichment {
 				if (m.find()) {
 					preparedStatementug.setString(2, "Déplacement");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 					p = Pattern.compile("^(Déjeuner)");
 					m = p.matcher(entitled);
@@ -75,6 +80,7 @@ public class DataEnrichment {
 				if (m.find()) {
 					preparedStatementug.setString(2, "Déjeuner");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {	
 					p = Pattern.compile("^(Réunion)");
 					m = p.matcher(entitled);
@@ -87,24 +93,28 @@ public class DataEnrichment {
 								preparedStatementug.setString(2, "Réunion");
 							}
 									preparedStatementug.executeUpdate();
+									preparedStatementug.close();
 				} else {
 					p = Pattern.compile("^(D(î|i)ner)");
 					m = p.matcher(entitled);
 				} if (m.find()) {
 					preparedStatementug.setString(2, "Dîner");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 					p = Pattern.compile("^(Discours)");
 					m = p.matcher(entitled);
 				if (m.find()) {
 					preparedStatementug.setString(2, "Discours");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 					p = Pattern.compile("^(Réception )");
 					m = p.matcher(entitled);
 				} if (m.find()) {
 					preparedStatementug.setString(2, "Réception");
 					preparedStatementug.executeUpdate();
+					preparedStatementug.close();
 				} else {
 					p = Pattern.compile("^(Cérémonie( |s ))");
 					m = p.matcher(entitled);
@@ -117,30 +127,35 @@ public class DataEnrichment {
 				} if (m.find()) {
 							preparedStatementug.setString(2, "Visite");
 							preparedStatementug.executeUpdate();
+							preparedStatementug.close();
 				} else {
 					p = Pattern.compile("^(Remise (de son|du) rapport )");
 					m = p.matcher(entitled);
 				} if (m.find()) {
 							preparedStatementug.setString(2, "Remise de rapport");
 							preparedStatementug.executeUpdate();
+							preparedStatementug.close();
 				} else {	
 						p = Pattern.compile("^(Rencontre avec)");
 						m = p.matcher(entitled);
 				} if (m.find()) {
 							preparedStatementug.setString(2, "Rencontre");
 							preparedStatementug.executeUpdate();
+							preparedStatementug.close();
 				} else {
 						p = Pattern.compile("^(Sommet)");
 						m = p.matcher(entitled);
 				} if (m.find()) {
 							preparedStatementug.setString(2, "Sommet");
 							preparedStatementug.executeUpdate();
+							preparedStatementug.close();
 				} else {
 						p = Pattern.compile("^(Inauguration)");
 						m = p.matcher(entitled);
 				} if (m.find()) {
 							preparedStatementug.setString(2, "Inauguration");
 							preparedStatementug.executeUpdate();
+							preparedStatementug.close();
 						}
 				}}		
 		/*

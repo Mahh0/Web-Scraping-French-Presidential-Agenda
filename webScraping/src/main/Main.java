@@ -21,9 +21,11 @@ import java.util.*;
 
 public class Main {
 	private static Logger logger = LogManager.getLogger(Main.class);
+	Connection con = new MySqlConnection().getConnection();
 	
 	public static void main(String[] args) throws Exception {
 		logger.info("Starting the program");
+		
 		
 		MySqlConnection.setParameters();
 		/*
@@ -133,6 +135,7 @@ public class Main {
 	                    preparedStatementevent.setString(2, eventtype);
 	                    preparedStatementevent.setString(3, entitled);
 	                    preparedStatementevent.executeUpdate();
+						preparedStatementevent.close();
 	                /*
 	                 * EN - Insertion of rows in evenement table, using PreparedStatement. We now have start date, type and entitled, we just need the duration.
 	                 * FR - Insertion de lignes dans evenement en utilisant PreparedStatement, avec les données récoltées précédemment. Il manque maintenant seulement la durée.
@@ -145,6 +148,7 @@ public class Main {
 	                if (a.next()) {
 	                	currentEventID = a.getInt(1);
 	                }
+					
 	                /*
 	                 * EN - Recovery of the ID of the event, for the duration of the previous event.
 	                 * FR - Lignes qui permettent de récupérer l'ID de l'événement pour après calculer les durées.
@@ -185,6 +189,7 @@ public class Main {
 	                pSduree.setString(1, timeformat);
 	                pSduree.setInt(2, previousEventID);
 	                pSduree.executeUpdate();
+					preparedStatementevent.close();
 	                /*
 	                 * FR - Ajout de la durée de l'événement précédent à l'aide d'un preparedStatement et d'une instantiation de la classe EventTimeManagement.
 	                 * EN - addition of event duration thanks to preparedStatement and instantiation of EventTimeManagement class.

@@ -1,6 +1,9 @@
 package init;
 
 import java.sql.*;
+
+
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,23 +19,39 @@ public class MySqlConnection {
 	 {
 		 String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
 	     Connection con = null;
+		 
+
 	     try 
 	     {
 			 logger.info("Connecting to the database : " + url + " " + username + " " + userpasswd);
 	         con = DriverManager.getConnection(url, username, userpasswd);
+			 
 	     } 
 	     catch (Exception e) 
 	     {
 	         // TODO Auto-generated catch block
 	    	 logger.error("Database connexion error !", e);
-	     }
-	    return con;
+ 
+	     } 
+		
+
+		 return con;
+	    
 	    
 	    /*
 	     * FR - Connexion à la base de données
 	     * EN - Connection to the database
 	     */
+		
 	    }
+
+		
+		
+			
+	
+			
+		
+		
 
 		public static void setParameters() {
 			/*
