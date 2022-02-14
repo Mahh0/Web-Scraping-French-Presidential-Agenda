@@ -64,7 +64,7 @@ public class Main {
 			System.out.println("Do you wan't to clear local HTML tables ? (y/n)");
 		   	Scanner sc = new Scanner(System.in);
 			String str = sc.nextLine();
-			if (str.contains("y")) {
+			if (str.contains("yes")) {
 				for(File file: dir.listFiles()) 
 				if (!file.isDirectory()) 
 				file.delete();

@@ -165,7 +165,31 @@ public class resources_scraping {
 	}
 		  return dossiers;
 	}
+
+	public ArrayList<String> getQuotes() {
+		// Sometimes, there are quotes on pages, so they are scraped here.
+		Elements quotes = doc.select("blockquote");
+		ArrayList<String> quotesList = new ArrayList<String>();
+		for (Element quote : quotes){
+			quotesList.add(quote.text());
+		}
+		return quotesList;	
+	}
+
+	public Hashtable<String, String> getInsertions() {
+		// example : https://www.elysee.fr/emmanuel-macron/2022/01/11/remise-du-rapport-de-la-commission-bronner
+
+		Elements cont = doc.select("div.push-insert--cta");
+		Hashtable<String, String> hashtable = new Hashtable<String, String>();
+		for (Element contu : cont){
+			hashtable.put(contu.text(), contu.select("a[href]").first().attr("href"));
+		}
+		return hashtable;
+	}
 	
+
+
+
 	}
 
 

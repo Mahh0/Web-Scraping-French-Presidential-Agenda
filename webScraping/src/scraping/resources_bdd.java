@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
@@ -50,6 +52,8 @@ public class resources_bdd {
 				ArrayList<String> TwitterArray = ext.getTwitter();
 				ArrayList<String> instaArray = ext.getInsta();
 				ArrayList<String> folderArray = ext.getDossier();
+				ArrayList<String> quotesArray = ext.getQuotes();
+				Hashtable<String, String> insertionsArray = ext.getInsertions();
 				/*
 				 * FR - Connection à la page, et analyse + appel des méthodes de la classe ExternalLinks, pour retourner ce que contient le code HTML.
 				 * EN - Connection to the page, and analysis + call of the methods of the ExternalLinks class, to return what there is on the HTML
@@ -72,12 +76,14 @@ public class resources_bdd {
 				boolean isEmptyTwitterArray = TwitterArray.isEmpty();
 				boolean isEmptyinstaArray = instaArray.isEmpty();
 				boolean isEmptyfolderArray = folderArray.isEmpty();
+				boolean isEmptyQuotesArray = quotesArray.isEmpty();
+				boolean isEmptyHashtableInsertionsArray = insertionsArray.isEmpty();
 				/*
 				 * FR - Conditions pour tester si les ArrayList sont remplies
 				 * EN - Conditions for testing if the ArrayLists are filled or not
 				 */
 				
-				if ((isEmptyTwitterArray == true)&&(isEmptyPDF == true)&&(isEmptyVidDaily == true)&&(isEmptyVidYtb == true)&&(tex == "")&&(isEmptyIMG == true)&&(isEmptyinstaArray == true)&&(isEmptyfolderArray == true)) {
+				if ((isEmptyTwitterArray == true)&&(isEmptyQuotesArray == true)&&(isEmptyHashtableInsertionsArray==true)&&(isEmptyPDF == true)&&(isEmptyVidDaily == true)&&(isEmptyVidYtb == true)&&(tex == "")&&(isEmptyIMG == true)&&(isEmptyinstaArray == true)&&(isEmptyfolderArray == true)) {
 					final String insertionlienVide = "INSERT INTO ressources (idTable, url) values (?,?)";
 					PreparedStatement psLienVide = con.prepareStatement(insertionlienVide);
 					psLienVide.setInt(1, currentEventID);
@@ -210,6 +216,49 @@ public class resources_bdd {
 					
 					});		
 				}
+
+				if (isEmptyQuotesArray == false){
+					logger.info("Citation détectée");
+					/*
+					 * FR - Si l'arrayList des  citations n'est pas vide, on procède à l'insertion pour chaque lien de l'ArrayList.
+					 * EN - If quotes links ArrayList is not empty, we insert for each links of the ArrayList.
+					 */
+					quotesArray.forEach((n) -> {
+					try {
+						psLien.setString(2, lienu.absUrl("href"));
+						psLien.setString(3, "citation");
+						psLien.setString(4, n);
+						psLien.executeUpdate();
+					} catch (SQLException e) {
+						logger.error("SQL Error while quotes insert !" + e);
+					}
+					
+					});		
+				}
+
+				if (isEmptyHashtableInsertionsArray == false){
+					logger.info("Le truc bizarre détecté !");
+					/*
+					 * FR - Si l'arrayList des  citations n'est pas vide, on procède à l'insertion pour chaque lien de l'ArrayList.
+					 * EN - If quotes links ArrayList is not empty, we insert for each links of the ArrayList.
+					 */
+					PreparedStatement psLienInsertions = con.prepareStatement("INSERT INTO ressources (idTable, url, categorie, `sous-categorie`, contenu) values (?,?,?,?,?)");
+					insertionsArray.forEach((n, n2) -> {
+					try {
+						psLienInsertions.setInt(1, currentEventID);
+						psLienInsertions.setString(2, lienu.absUrl("href"));
+						psLienInsertions.setString(3, "insertions");
+						psLienInsertions.setString(4, n);
+						psLienInsertions.setString(5, n2);
+						logger.debug(psLienInsertions);
+						psLienInsertions.executeUpdate();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					
+					});		
+				}
+
 				
 				if (isEmptyfolderArray == false){
 					// Insertion des dossiers 
