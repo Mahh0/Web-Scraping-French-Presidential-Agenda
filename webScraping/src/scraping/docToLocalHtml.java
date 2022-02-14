@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;

@@ -30,6 +30,8 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		logger.info("Starting the program");
+
+		logger.debug("Firewall must be set to OFF !");
 		
 		
 		MySqlConnection.setParameters();
@@ -89,6 +91,7 @@ public class Main {
 			 String accentRemoved = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 			if (link.toString()!= "http://www.elysee.fr/agenda-" + accentRemoved + "-" + year) { // while the link is not equal to current month
 				try {
+				logger.debug("Downloading the page !");
 				docToLocalHtml.downloadPage(doc.outerHtml(), link.toString()); // download the page
 				} catch (Exception e) {
 					logger.error("Error while downloading the page" + accentRemoved + year);

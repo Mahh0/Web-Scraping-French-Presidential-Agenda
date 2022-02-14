@@ -23,7 +23,6 @@ public class MySqlConnection {
 
 	     try 
 	     {
-			 logger.info("Connecting to the database : " + url + " " + username + " " + userpasswd);
 	         con = DriverManager.getConnection(url, username, userpasswd);
 			 
 	     } 
