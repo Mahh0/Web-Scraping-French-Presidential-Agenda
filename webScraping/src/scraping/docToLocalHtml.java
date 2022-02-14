@@ -25,7 +25,7 @@ public class docToLocalHtml {
         // webScraping/src/main/resources/htmlAgenda/html-" + mMonth.group(0) + "-" + mYear.group(0));
         if (mMonth.find() && mYear.find()) {
             
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("webScraping/src/main/resources/htmlAgenda/html-" + mMonth.group(0) + "-" + mYear.group(0)), "UTF-8"));
+            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("webScraping/src/main/resources/htmlAgenda/html-" + mMonth.group(0) + "-" + mYear.group(0) + ".html"), "UTF-8"));
                 try {
                     out.write(outerHtml);
                 } finally {

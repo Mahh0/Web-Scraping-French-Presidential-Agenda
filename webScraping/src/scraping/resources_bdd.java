@@ -1,12 +1,10 @@
 package scraping;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
@@ -217,7 +215,6 @@ public class resources_bdd {
 					// Insertion des dossiers 
 
 					int fSize = folderArray.size();	
-					logger.debug("FOLDER ARRAY SIZE :" + fSize);
 						for (int i = 1; i<=fSize;i++) {
 							// Pour chaque lien de dossier dans l'ArrayList
 
@@ -258,14 +255,11 @@ public class resources_bdd {
 
 						 } else if (compteur != 0) { // Un dossier avec ce lien a déjà été inséré
 							int compteur2 = 0;
-							logger.debug("le compteur != 0");
 						// On récupère l'ID du dossier (de la requete count)
 						final String selectIdFolder = "SELECT id from dossier WHERE lien=(?)";
 						PreparedStatement recupIdRc = con.prepareStatement(selectIdFolder);
 						recupIdRc.setString(1, folderArray.get(i-1));
-						logger.debug("requete : " + recupIdRc);
 						ResultSet stIdc = recupIdRc.executeQuery();
-						logger.debug("resultatset : " + stIdc);
 						while (stIdc.next()) {
 							compteur2 = stIdc.getInt(1);
 						 }

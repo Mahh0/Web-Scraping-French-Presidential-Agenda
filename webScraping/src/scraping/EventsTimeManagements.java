@@ -16,10 +16,12 @@ public class EventsTimeManagements {
 	private static Logger logger = LogManager.getLogger(EventsTimeManagements.class);
 	String toa;
 	String dated;
+	int specialHour;
 
-	public EventsTimeManagements(String toa, String dated) {
+	public EventsTimeManagements(String toa, String dated, int specialHour) {
 		this.toa = toa;
 		this.dated = dated;
+		this.specialHour = specialHour;
 	}
 	
 	public String CalculDurees() throws ParseException {
@@ -58,6 +60,7 @@ public class EventsTimeManagements {
 		        Date vingt = HeureEvent.parse("20:00:00");
 		        Date minuit = dateFormat.parse("1970-01-02 00:00:00");
 		        long resultat = 0;
+
 		        
         if (jourEventPrecedent.equalsIgnoreCase(jourEventActuel)) {
             resultat = dateEventActuel.getTime() - dateEventPrecedent.getTime();
@@ -102,8 +105,7 @@ public class EventsTimeManagements {
         /*
          * A supprimer (resoudre problemes), si la duree (resultat) est inferieure à 0, on met 1000 par defaut).
          */
-        
-        
+
 
         TimeUnit time = TimeUnit.MINUTES; 
         long diffrence = time.convert(resultat, TimeUnit.MILLISECONDS) * 60000;
@@ -112,10 +114,7 @@ public class EventsTimeManagements {
         	    TimeUnit.MILLISECONDS.toMinutes(diffrence) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(diffrence)),
         	    TimeUnit.MILLISECONDS.toSeconds(diffrence) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(diffrence)));
         return timeformat;
-        /*
-         * FR - Conversion de resultat qui est en Millisecondes, en un format HH:mm:ss.
-         * EN - Converting result which is in Milliseconds, to HH:mm:ss format
-         */
+		// Converting the result (milliseconds) to HH:mm:ss format
 		
 	}
 }

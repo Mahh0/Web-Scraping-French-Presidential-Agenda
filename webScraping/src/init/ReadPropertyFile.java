@@ -16,7 +16,7 @@ public class ReadPropertyFile {
     private String user, userpw, host, port, database;
     // variables used to store the property file values.
 
-    private static String askForCleanup;
+    private static String askForCleanup, useLocalHtml, askForHtmlCleanup;
 
     public void readProps() {
         try {
@@ -26,6 +26,8 @@ public class ReadPropertyFile {
             this.port = port;
             this.database = database;
             this.askForCleanup = askForCleanup;
+            this.useLocalHtml = useLocalHtml;
+            this.askForHtmlCleanup = askForHtmlCleanup;
             Properties prop = new Properties(); // Object of Properties class
             FileInputStream ip = new FileInputStream("webScraping/src/config.properties"); // Say to the program where is the properties file
             prop.load(ip);
@@ -37,6 +39,8 @@ public class ReadPropertyFile {
             port = prop.getProperty("port");
             database = prop.getProperty("database");
             askForCleanup = prop.getProperty("askForCleanup");
+            useLocalHtml = prop.getProperty("useLocalHtml");
+            askForHtmlCleanup = prop.getProperty("askForHtmlCleanup");
             // Assigning the values
         } catch (IOException e) {
             logger.error("Error while reading the properties file !");
@@ -65,5 +69,13 @@ public class ReadPropertyFile {
 
     public static String getAskforcleanup() {
         return askForCleanup;
+    }
+
+    public static String getUseLocalHtml(){
+        return useLocalHtml;
+    }
+
+    public static String getAskForHtmlCleanup(){
+        return askForHtmlCleanup;
     }
 }
