@@ -183,6 +183,25 @@ public class DataEnrichment {
 	            perso.setString(4, nom);
 	            perso.executeUpdate();
 				perso.close();
+
+				try {
+					String idpersonne = wikidata.wikidata(nom, splitter[1]);
+					if(!idpersonne.isEmpty()){
+						logger.debug("I found an ID ! it is " + idpersonne + " for the person(name/surname) " + nom + " " + splitter[1]);
+						PreparedStatement wikidata = con.prepareStatement("UPDATE personne SET idwikidata = ? WHERE nom = ? AND prenom = ?");
+						wikidata.setString(1, idpersonne);
+						wikidata.setString(2, nom);
+						wikidata.setString(3, splitter[1]); 
+						wikidata.executeUpdate();
+						wikidata.close();
+					}
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					logger.error("Error while adding a wikidata ID ! Maybe the person was not found in wikidata !");
+				}
+
 		        } catch (SQLException e) {
 		        	logger.error("Error while personnality insert !");
 		        }
