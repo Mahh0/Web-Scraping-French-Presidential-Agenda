@@ -6,15 +6,15 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 public class SSLHelper {
-    /*
-    * SSLHelper is a class which permits to add the SSL Certificates
-    */
+    /**
+     * SSLHelper is a class which permits the connections to the website with SSL certificates.
+     * @param url
+     * @return
+     */
 
 	static public Connection getConnection(String url){
         return Jsoup.connect(url).sslSocketFactory(SSLHelper.socketFactory());
@@ -43,12 +43,6 @@ public class SSLHelper {
             throw new RuntimeException("Failed to create a SSL socket factory", e);
         }
     }
-    
-    /*
-     * FR - Cette classe est utilisée pour les connexions, c'est la gestion des certificats SSL.
-     * EN - This class is used for connections, it is the management of SSL certificates.
-     */
-    
 }
 
 

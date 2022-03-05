@@ -1,40 +1,46 @@
 package scraping;
 import java.sql.Connection;
-import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import init.MySqlConnection;
 
 public class DataEnrichment {
-	Connection con = new MySqlConnection().getConnection();
+	/**
+	 * The DataEnrichment class contains 2 enrichment methods :
+	 * 		- typeEnrich : add types when they are not presents
+	 * 		- personnalitesEnrich : try to guess personnalities from the entitleds.
+	 */
+
+	Connection con = MySqlConnection.getConnection();
 	private static Logger logger = LogManager.getLogger(DataEnrichment.class);
+	/**
+	 * Initializing a logger and the static mysql connection.
+	 * @param eventtype
+	 */
 	
-	public void typeEnrich(String entitled, String eventtype, int currentEventID) throws SQLException {
-	    /*
-	     * FR - L'enrichissement est fait à partir de l'intitulé. On retire les accents et les majuscules pour qu'il soit plus simple à analyser.
-	     * EN - The enrichment is made from the title. We remove accents and capital letters to make it easier to analyze.
-	     */
+	public void typeEnrich(String entitled, String eventtype, int currentEventID) {
+		/**
+		 * typeEnrich : method which try to guess a type when it is not present from the entitled.
+		 * It takes as parameters : 
+		 * 		- entitled (where we have to guess)
+		 * 		- currentEventID (for insertions, when a type is find)
+		 */
+		try {
+
 	    Pattern p;
 	    Matcher m;
-	    
-	    final String updategenerated = "UPDATE evenement SET `generated` = ?, type = ? WHERE id = ?";
-        PreparedStatement preparedStatementug = con.prepareStatement(updategenerated);
+        PreparedStatement preparedStatementug = con.prepareStatement("UPDATE evenement SET `generated` = (?), type = (?) WHERE id = (?)");
         preparedStatementug.setInt(3, currentEventID);
         preparedStatementug.setInt(1, 1);
-        /*
-         * Pr�paration de l'insertion
-         */
-
-		if (eventtype.isEmpty()) {
+		/**
+		 * Preparing the insertion : defining a pattern, which will be the regular expression and a matcher, which will be the entitled.
+		 * Also starting the preparedStatement.
+		 */
 			
 			p = Pattern.compile("^(Entretien)");
 			m = p.matcher(entitled);
@@ -156,22 +162,47 @@ public class DataEnrichment {
 							preparedStatementug.executeUpdate();
 							preparedStatementug.close();
 						}
-				}}		
-		/*
-		 * EN - If generated is true, we update the new eventtype and set generated to 1.
-		 * FR - Si "generated" est vrai, on fait un update dans la BDD pour définir le nouveau type d'évènement et on met generated à true.
+				}
+				
+			} catch (SQLException sqex) {
+				logger.error("SQL Error");
+				logger.error(sqex);
+			} catch (Exception ex) {
+				logger.error("Undefined ERROR");
+				logger.error(ex);
+			}
+		/**
+		 * This methods is looking with regex if patterns are found in the entitleds. If yes, then we are updating the mysql datas with the types.
+		 * We also set generated to 1 to say that it's a generated type.
 		 */
 		
 }
 	
+/*
 	public void personnalitesEnrich (String entitled, int currentEventID) {
 		Pattern p;
         Matcher m;
 	      p = Pattern.compile("(?:M\\.|Mme)\\s(.+),") ;
 	      m = p.matcher(entitled);
 	      
-	      if(m.find()) { 
-	            String[] splitter = m.group().split(" ");
+
+		  /**
+		   * Algo à faire :
+		   * Si le patterne est trouvé, on enlève le début (M. ou Mme et la fin (la virgule))
+		   * On injecte dans la méthode wikidata le nom et le prénom pour trouver le Q. 
+		   * On récupère ce Q
+		   * On teste si le Q existe déjà
+		   * Si le Q existe déjà dans la table personne, on récupère son ID et on fait une insertion dans la table presence
+		   * Si le Q n'existe pas, on récupère son ID et on fait une insertion dans la table personne et dans la table présence (récupération du nom et prénom sur wikidata et sparql) 
+		   *  et on l'injecte dans la base de données
+		   
+
+	      if(m.find()) { // If regex found
+			String person = m.toString();
+			person = person.replace("M", "");
+			person = person.replace("Mme.")
+
+	            
 	            
 	            if (splitter.length == 3) {
 		        String nom = splitter[2].replaceAll(".$", "");
@@ -183,6 +214,7 @@ public class DataEnrichment {
 	            perso.setString(4, nom);
 	            perso.executeUpdate();
 				perso.close();
+				
 
 				try {
 					String idpersonne = wikidata.wikidata(nom, splitter[1]);
@@ -211,5 +243,5 @@ public class DataEnrichment {
 	        }
 		
 	}
-
+*/
 }

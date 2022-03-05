@@ -10,9 +10,9 @@ import org.jsoup.select.Elements;
 public class resources_scraping {
 	Document doc;
 	private static Logger logger = LogManager.getLogger(resources_scraping.class);
-	/*
-	 * FR - La classe ExternalLinks prend en paramètre un document (code HTML) et l'analyse pour la table ressources.
-	 * EN - The ExternalLinks class takes a document (HTML code) as a parameter and analyzes it for ressources table.
+	/**
+	 * This class contains scraper for external ressources. It is used by resources_bdd
+	 * @param doc
 	 */
 
 	public resources_scraping(Document doc) {
@@ -20,9 +20,8 @@ public class resources_scraping {
 	}
 	
 	public ArrayList<String> getPdf() {
-		/*
-		 * FR - cette méthode regarde si le document doc contient des PDF. Elle retourne une ArrayList contenant les liens des pdf.
-		 * EN - this method checks if the doc document contains PDFs. It returns an ArrayList containing pdf links
+		/**
+		 * this method checks if the doc document contains PDFs. It returns an ArrayList containing pdf links
 		 */
 		Elements pdf = doc.select("section.container.js-document");
 		ArrayList<String> pdfs = new ArrayList<String>();
@@ -32,14 +31,14 @@ public class resources_scraping {
 				pdfs.add(t1.absUrl("href"));
 			}
 		}
-		return pdfs;		
+		return pdfs;
+				
 	}
 	
 	
 	public ArrayList<String> getVidDaily() {
-		/*
-		 * FR - cette méthode regarde si le document doc contient des vidéos daylimotion. Elle retourne une ArrayList contenant les liens des vidéos.
-		 * EN - this method checks if the doc document contains dailymotion videos. It returns an ArrayList containing videos links
+		/**
+		 * this method checks if the doc document contains dailymotion videos. It returns an ArrayList containing videos links
 		 */
 		Elements viddaily = doc.select(".dailymotion_player");
 		ArrayList<String> videos = new ArrayList<String>();
@@ -54,9 +53,8 @@ public class resources_scraping {
 	
 	
 	public ArrayList<String> getVidYtb() {
-		/*
-		 * FR - cette méthode regarde si le document doc contient des vidéos youtube. Elle retourne une ArrayList contenant les liens des vidéos.
-		 * EN - this method checks if the doc document contains youtube videos. It returns an ArrayList containing videos links
+		/**
+		 * this method checks if the doc document contains youtube videos. It returns an ArrayList containing videos links
 		 */
 		Elements vidytb = doc.select(".youtube_player");
 		ArrayList<String> videos = new ArrayList<String>();
@@ -71,9 +69,8 @@ public class resources_scraping {
 	
 	
 	public String getText() {
-		/*
-		 * FR - cette méthode regarde si le corps de la page contient du texte. Elle le retourne s'il en contient, sous forme String.
-		 * EN - this method looks to see if the body of the page contains text. It returns it if it contains any, in String form.
+		/**
+		 * this method looks to see if the body of the page contains text. It returns it if it contains any, in String form.
 		 */
 	Elements text = doc.select(".reset-last-space");
 	for (Element textu : text) {
@@ -84,9 +81,8 @@ public class resources_scraping {
 	
 	
 	public ArrayList<String> getImgs() {
-		/*
-		 * FR - cette méthode regarde si le document doc contient des images. Elle retourne une ArrayList les contenant.
-		 * EN - this method checks if the doc document contains images. It returns an ArrayList containing them.
+		/**
+		 * this method checks if the doc document contains images. It returns an ArrayList containing them.
 		 */
 		ArrayList<String> images = new ArrayList<String>();
 		Elements diapos = doc.select("div.carousel-container");
@@ -102,8 +98,8 @@ public class resources_scraping {
 	}
 	
 	public ArrayList<String> getTwitter() {
-		/*
-		 * Cette méthode se charge de récupérer les liens twitter.
+		/**
+		 * This methods looks for twitter links, and then return an arraylist containing them.
 		 */
 		ArrayList<String> liens = new ArrayList<String>();
 		Elements twitters = doc.select(".twitter-tweet");
@@ -120,9 +116,9 @@ public class resources_scraping {
 	}
 	
 	public ArrayList<String> getInsta(){
-	/* 
-	 * Cette méthode se charge de récupérer les liens instas. 
-	 */
+		/**
+		 * This method looks for instagram links, and then return an arraylist containing them.
+		 */
 		ArrayList<String> liens = new ArrayList<String>();
 		Elements instas = doc.select(".instagram-media");
 		
@@ -134,13 +130,12 @@ public class resources_scraping {
 					liens.add(tests3);
 				}
 		}
-	
 				return liens; 
 	}
 	
 	public ArrayList<String> getDossier(){
-		/*
-		 * Cette méthode se charge de vérifier si des pages font parties d'un dossier
+		/**
+		 * Some pages are members of one or several folders, it checks if they are, and then return an arraylist containing them.
 		 */
 		ArrayList<String> dossiers = new ArrayList<String>(); // ArrayList containing 0: entitled, 1:link, 2: entitled2, 3: link2, ...
 		
@@ -148,7 +143,6 @@ public class resources_scraping {
 		  if (conteneurdossier != null){ // Inutile de faire la suite si notre élément est vide : pas de dossier, sinon on continue
 		  		Element casesingle = conteneurdossier.select(".folder-link.folder-link--link").first(); // Sélection du bloc contenant 1 seul dossier
 		  			if (casesingle !=null) { // Si sélection réussie, ...
-		 				System.out.println("y'a un lien !");
 						Element url = casesingle.select(".folder-link-content-title").first();
 		 				// dossiers.add(casesingle.select(".folder-link-content-title > span").text());
 		 				dossiers.add(url.absUrl("href"));
@@ -166,18 +160,11 @@ public class resources_scraping {
 		  return dossiers;
 	}
 
-	public ArrayList<String> getQuotes() {
-		// Sometimes, there are quotes on pages, so they are scraped here.
-		Elements quotes = doc.select("blockquote");
-		ArrayList<String> quotesList = new ArrayList<String>();
-		for (Element quote : quotes){
-			quotesList.add(quote.text());
-		}
-		return quotesList;	
-	}
-
 	public Hashtable<String, String> getInsertions() {
-		// example : https://www.elysee.fr/emmanuel-macron/2022/01/11/remise-du-rapport-de-la-commission-bronner
+		/**
+		 * This method find containers with links to other websites/pages.
+		 * example : https://www.elysee.fr/emmanuel-macron/2022/01/11/remise-du-rapport-de-la-commission-bronner
+		 */
 
 		Elements cont = doc.select("div.push-insert--cta");
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
@@ -186,10 +173,6 @@ public class resources_scraping {
 		}
 		return hashtable;
 	}
-	
-
-
-
 	}
 
 

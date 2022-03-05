@@ -4,53 +4,43 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MySqlConnection {
-	private static String username, userpasswd, host, port, database;
-		
-	/*
-	 * mySqlConnection permits to connect to the database, you can call it with Connection con = new mySqlConnection().getConnection();
+	/**
+	 * This class have 2 methods :
+	 * 	- The first one, getConnection is the method that we instantiate to connect to the database
+	 * 	- The second, setParameters, get the parameters of the config.properties through ReadProperties file 
+	 * and then getConnection can read it to have the good parameters for the database.
 	 */
+
+	private static String username, userpasswd, host, port, database;
 	private static Logger logger = LogManager.getLogger(MySqlConnection.class);
-	
-	public Connection getConnection()
-	 {
+	/**
+	 * Database parameters and logger
+	 */
+
+	public static Connection getConnection() {
+		/**
+		 * connection to the database method.
+		 */
 		 String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
 	     Connection con = null;
+		 /**
+		  * Defining an url to connect to the db (saying that we are using mysql, jdbc and the parameters that we got from setParameters)
+		  */
 		 
-
-	     try 
-	     {
+	     try {
 	         con = DriverManager.getConnection(url, username, userpasswd);
-			 
-	     } 
-	     catch (Exception e) 
-	     {
-	         // TODO Auto-generated catch block
+	     } catch (Exception e) {
 	    	 logger.error("Database connexion error !", e);
- 
-	     } 
-		
-
-		 return con;
-	    
-	    
-	    /*
-	     * FR - Connexion à la base de données
-	     * EN - Connection to the database
-	     */
-		
+	     }
+		return con;
+		 /**
+		  * We try to connect to the database thanks to DriverManager, with the url from above, and username and password from setParameters method.
+		  */	
 	    }
 
-		
-		
-			
-	
-			
-		
-		
-
 		public static void setParameters() {
-			/*
-			 * Static method which will set the parameters for the rest of the program, using ReadProperty class and methods.
+			/**
+			 * Method setParameters returns the parameters that he got from ReadPropertyFile class. It is static, so it will be called only one time.
 			 */
 			ReadPropertyFile rp = new ReadPropertyFile();
 			rp.readProps();

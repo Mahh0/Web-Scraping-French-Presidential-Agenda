@@ -12,47 +12,62 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
-
 public class MainLinks {
-	/*
-	 * EN - This class creates the links for the analysis of the presidential agenda. It creates only the links needed, thanks to mySql connection.
-	 * FR - Cette classe crée les liens à analyser. Elle crée seulement les liens nécéssaires.
+	/**
+	 * This class creates links used for the analysis of the presidential agenda. It creates only the links needed.
+	 * @throws ParseException
+	 * @throws SQLException
 	 */
+	Connection con = MySqlConnection.getConnection();
 
 	public ArrayList<String> AnalyseLiens() throws ParseException, SQLException {
-		Connection con = new MySqlConnection().getConnection();
+		/**
+		 * Method used for links generation
+		 */
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
 		SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM");
 		SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
+		/**
+		 * Defining, the MySQL Connection
+		 * getting the current Year and the current Month
+		 * Adding formaters to transform months (eg: format Septembre to format 09)
+		 */
 
 		ArrayList<String> months = new ArrayList<String>();
 		List<String> listeMois = Arrays.asList("janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre");
 		months.addAll(listeMois);
-			
-		Hashtable<String, Integer> numbers = new Hashtable<String, Integer>();
+		Hashtable<String, Integer> years = new Hashtable<String, Integer>();
 		ArrayList<String> liens = new ArrayList<String>();
-		/*
-		 * FR - l'ArrayList months contient les mois, la Hashtable numbers va contenir les années, et l'ArrayList liens, les liens qui seront retournés.
-		 * EN - The ArrayList months contains the months, the Hashtable numbers will contain the years, and the ArrayList links, the links that will be returned.
+		/**
+		 * Creating a list for the months to increment easily.
+		 * Creating an Hashtable "numbers" which will asociate Strings and Int for years.
 		 */
 		
 
 		int e = 0;
 		int nb = 0;
 		int i3;
+		String test = "";
+		/**
+		 * Some variables which will be used for the calculations
+		 */
 
-		for (int i = 2017; i <= year; i++) {
-			String test = String.valueOf(i);
-			numbers.put(test, i);
-			/*
-			 * Traitements concernant l'ann�e pour l'avoir en STRING et en INT.
-			 * On a ici une premi�re boucle pour chaque ann�e de 2017 jusqu'� ann�e actuelle
+		for (int i = 2017; i <= year; i++) { // For 2017 to 2022 (current year)
+			test = String.valueOf(i);
+			years.put(test, i);
+			/**
+			 * In this first for, we will say that we will do the following from 2017 to 2022.
+			 * (Before, )
 			 */
 
 			for (String currentmonth : months) {
-				if (e != 11) { e++; } else { e = 0; }
-				if (currentmonth == "décembre" && numbers.get(test) == i) { i3 = i + 1; } else { i3 = i; }
+				/**
+				 * For each month (we now have a loop like "mai 2017, avril 2017, juin 2017, ... , janvier 2018, février 2018, ... , janvier 2019, ...")
+				 */
+				if (e != 11) { e++; } else { e = 0; } // 
+				if (currentmonth == "décembre" && years.get(test) == i) { i3 = i + 1; } else { i3 = i; }
 
 				String nextmonth = months.get(e);
 
@@ -80,9 +95,9 @@ public class MainLinks {
 
 				
 				if (nb == 0) {
-					if (numbers.get(test) == 2017 && (currentmonth == "janvier" || currentmonth == "février" || currentmonth == "mars" || currentmonth == "avril")) {
+					if (years.get(test) == 2017 && (currentmonth == "janvier" || currentmonth == "février" || currentmonth == "mars" || currentmonth == "avril")) {
 					} else {
-					liens.add("http://www.elysee.fr/agenda-" + currentmonthnormalized + "-" + numbers.get(test)); // we add the link to the table
+					liens.add("http://www.elysee.fr/agenda-" + currentmonthnormalized + "-" + years.get(test)); // we add the link to the table
 					
 					String deleteReq = "DELETE re FROM evenement ev JOIN ressources re ON re.idTable=ev.id WHERE ev.dated > '"
 							+ i + "-" + CurrenttMonthFormat

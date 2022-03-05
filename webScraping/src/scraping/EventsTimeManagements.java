@@ -5,34 +5,51 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class EventsTimeManagements {
-	/*
-	 * FR - Cette classe gère la durée des événements. Elle prend en paramètre la date d'un événement et la date de l'événement précédent.
-	 * EN - This class manages the duration of events. It takes as a parameter the date of an event and the date of the previous event.
+	/**
+	 * This class cares of the events duration (enrichment), for the PREVIOUS event.
+	 * There are several methods : 
+	 * 		- EventsTimeManagement, it takes all the parameters needed (toa, dated, specialHour, lastEventType)
+	 * 		- CalculDurees, the main method, which calculate the lengths of the events
+	 * 		- CalculType, the last one, it is used by CalculDurees to set max event time limits (because without this one, even can be like 10 hours, for a talk for example)
 	 */
+
 	private static Logger logger = LogManager.getLogger(EventsTimeManagements.class);
 	String toa;
 	String dated;
 	int specialHour;
+	String lastEventType;
+	/**
+	 * @param toa
+	 * toa is the previous event hour
+	 * @param dated
+	 * dated is the current event hour
+	 * @param lastEventType
+	 * type of the last event, for the last method.
+	 */
 
-	public EventsTimeManagements(String toa, String dated, int specialHour) {
+	public EventsTimeManagements(String toa, String dated, String lastEventType) {
+		/**
+		 * Takes the parameters
+		 */
 		this.toa = toa;
 		this.dated = dated;
-		this.specialHour = specialHour;
+		this.lastEventType = lastEventType;
 	}
 	
 	public String CalculDurees() throws ParseException {
+		/**
+		 * Do the calculations
+		 */
+		
 		Date dateEventPrecedent = null;
 		Date dateEventActuel = null;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateEventPrecedent  = dateFormat.parse(toa);
-		dateEventActuel = dateFormat.parse(dated);
-		/*
-		 * FR - Mise en forme des dates pour les calculs
-		 * EN - Formatting the dates for calculations
+		dateEventPrecedent  = dateFormat.parse(toa); // toa = previous = the one we wan't to calculate
+		dateEventActuel = dateFormat.parse(dated); // dated = actuel = the one which can be used for the calcul
+		/**
+		 * Formatting the dates for calculations
 		 */
 		
 				String jourEventPrecedent = toa.substring(0,10);
@@ -44,14 +61,11 @@ public class EventsTimeManagements {
 		        SimpleDateFormat HeureEvent = new SimpleDateFormat("HH:mm:ss");
 		        heureEvtPrecedent = HeureEvent.parse(stringHeureEventPrecedent);
 		        heureEvtActuel = HeureEvent.parse(stringHeureEventActuel);
-		        /*
-		         * FR - Pour faire les calculs, on récupère seulement les heures en enlevant les jours
-		         * Sortie : heureEvtPrecedent (Date) et heureEvtActuel (Date)
-		         * jourEventPrecedent et jourEventActuel : strings pour comparer les jours
-		         * 
-		         * EN - To do the calculations, we only recover the hours by removing the days
-		         */
-		     
+				/**
+				 * To make certain calculations, we only keep the hours (by deleting the days)
+				 * heureEvtActuel and heureEvtPrecedent contains theses values.
+				 * jourEventPrecedent and jourEventActuel contains the values with the days
+				 */
 		
 		        Date huit = HeureEvent.parse("08:00:00");
 		        Date douze = HeureEvent.parse("12:00:00");
@@ -60,52 +74,49 @@ public class EventsTimeManagements {
 		        Date vingt = HeureEvent.parse("20:00:00");
 		        Date minuit = dateFormat.parse("1970-01-02 00:00:00");
 		        long resultat = 0;
+				/**
+				 * Parsing time slots for the calculations.
+				 */
 
 		        
         if (jourEventPrecedent.equalsIgnoreCase(jourEventActuel)) {
             resultat = dateEventActuel.getTime() - dateEventPrecedent.getTime();
+			resultat = this.calculType(resultat);
+			/**
+			 * If the two compared events are on the same day, we just make a simple subscration.
+			 * Then, we send the result to calculType which returns a new result.
+			 * calculType check that the events durations are not too long
+			 */
         }
-        /*
-         * FR - Si les deux événements comparés sont sur le même jour, on fait une simple soustraction des dates complètes
-         * EN - If the two compared events are on the same day, we do a simple subtraction of the complete dates
-         */
-        
-        else if (jourEventPrecedent != jourEventActuel) // sinon si les evenements comparés ne sont pas le même jour
-        	{
+        else if (jourEventPrecedent != jourEventActuel) {
+			/**
+			 * Else if the two compared events are not the same day, we do calculations with time slots
+			 * So then we check in which time slot is the event, when found we do (end hour of the time slot - event hour)
+			 * And then we pass it into CalculType.
+			 */
             if (heureEvtPrecedent.getTime() >= huit.getTime() && heureEvtPrecedent.getTime() < douze.getTime()) {
         		resultat = douze.getTime() -  heureEvtPrecedent.getTime();
+				resultat = this.calculType(resultat);
             } 
             else if (heureEvtPrecedent.getTime() >= douze.getTime() && heureEvtPrecedent.getTime() < treize.getTime()) {
-            	resultat = treize.getTime() - heureEvtPrecedent.getTime(); // ...
+            	resultat = treize.getTime() - heureEvtPrecedent.getTime();
+				resultat = this.calculType(resultat);
             }
          
             else if (heureEvtPrecedent.getTime() >= treize.getTime() && heureEvtPrecedent.getTime() < dixhuit.getTime()) {
         		resultat = dixhuit.getTime() -  heureEvtPrecedent.getTime();
+				resultat = this.calculType(resultat);
             }
             
             else if (heureEvtPrecedent.getTime() >= dixhuit.getTime() && heureEvtPrecedent.getTime() < vingt.getTime()){
         		resultat = vingt.getTime() - heureEvtPrecedent.getTime();
+				resultat = this.calculType(resultat);
             }
             else if (heureEvtPrecedent.getTime() >= vingt.getTime() && heureEvtPrecedent.getTime() < minuit.getTime()){
         		resultat = minuit.getTime() - heureEvtPrecedent.getTime();
+				resultat = this.calculType(resultat);
             }
         }
-        /*
-         * FR - Cette série de tests s'applique dans le cas ou les deux évènements ne sont pas le meme jour, on fait des calculs à l'aide de créneaux :
-         * EN - This series of tests applies in the case where the two events are not the same day, we make calculations using time slots :
-         * 
-         * 8h-12h 12h-13h 13h-18h 18h-20h 20h-00h
-         */
-        
-        
-        if (resultat < 0) { 
-        	resultat = 1000;
-        	logger.error("Error for event duration ! Look the event with " + toa);
-        }
-        /*
-         * A supprimer (resoudre problemes), si la duree (resultat) est inferieure à 0, on met 1000 par defaut).
-         */
-
 
         TimeUnit time = TimeUnit.MINUTES; 
         long diffrence = time.convert(resultat, TimeUnit.MILLISECONDS) * 60000;
@@ -114,7 +125,56 @@ public class EventsTimeManagements {
         	    TimeUnit.MILLISECONDS.toMinutes(diffrence) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(diffrence)),
         	    TimeUnit.MILLISECONDS.toSeconds(diffrence) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(diffrence)));
         return timeformat;
-		// Converting the result (milliseconds) to HH:mm:ss format
-		
+		/**
+		 * Converting the resul (resultat) which is in milliseconds to a normal format (HH:mm:ss)
+		 */		
+	}
+
+	public long calculType (long duree) {
+		/**
+		 * This method is used in the method above. It checks, for each event, 
+		 * with the event type if the duration is not too long, and if too long, it is updated with a normal one.
+		 */
+			switch (lastEventType) {
+				case "Conseil de défense":
+					if (duree > 7200000) { duree = 5400000; }
+					break;
+				case "Conseil des ministres":
+					if (duree > 7200000) { duree = 5400000; }
+					break;
+				case "Entretien":
+					if (duree > 5400000) { duree = 1800000; }
+					break;
+				case "Cérémonie":
+					if (duree > 10800000) { duree = 7200000; }
+					break;
+				case "Cérémonie officielle":
+					if (duree > 10800000) { duree = 7200000; }
+					break;
+				case "Réception":
+					if (duree > 7200000) { duree = 3600000; }
+					break;
+				case "Déjeuner":
+					if (duree > 7200000) { duree = 5400000; }
+					break;
+				case "Déplacement":
+					if (duree > 28800000) { duree = 28800000; }
+					break;
+				case "Discours":
+					if (duree > 5400000) { duree = 3600000; }
+					break;
+				case "Rencontre":
+					if (duree > 7200000) { duree = 7200000; }
+					break;
+				case "Voyage officiel":
+					if (duree > 36000000) { duree = 28800000; }
+					break;
+				case "Remise de rapport":
+					if (duree > 5400000) { duree = 5400000; }
+					break;
+				default:
+				if (duree > 28800000) { duree = 28800000; }
+			}
+		return duree;
 	}
 }
