@@ -18,7 +18,7 @@ public class resources_bdd {
 	 * This class is used for external links, it contains 1 class : insertionsressources.
 	 */
 
-	Connection con = MySqlConnection.getConnection();
+	Connection con = new MySqlConnection().getConnection();
 	Logger logger = LogManager.getLogger(resources_bdd.class);
 	/**
 	 * Defining some parameters, mysql database connection and logger.

@@ -25,16 +25,14 @@ import org.apache.commons.lang3.*;
 
 public class Main {
 	private static Logger logger = LogManager.getLogger(Main.class);
-
 	public static void main(String[] args) throws Exception {
 		logger.info("Starting the program. Firewall must be set to OFF if you wan't to use a remote SQL Server !");
-		
 		MySqlConnection.setParameters();
+		Connection con = new MySqlConnection().getConnection();
 		/**
 		 * Call of the setParameters method from MySqlConnection which set database parameters and others, using config.properties file.
 		 */
 
-		Connection con = new MySqlConnection().getConnection();
 		/**
 		 * Instantation of a Connection con that uses getConnection from MySqlConnection
 		 * It is used in the classes where we need interactions with the database
@@ -250,7 +248,7 @@ public class Main {
 					* Calling "typeEnrich" method from DataEnrichment, to add a type, only if the eventtype is empty. It will try to guess from the entitled.
 				    */
 	               
-				  // te.personnalitesEnrich(entitled, currentEventID);
+					te.personnalitesEnrich(entitled, currentEventID);
 				   /**
 					* Calling personnalitesEnrich method, which will try to guess thanks to the entitled if the event has peoples involved
 				    */

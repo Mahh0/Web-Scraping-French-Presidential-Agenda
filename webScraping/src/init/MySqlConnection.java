@@ -17,7 +17,7 @@ public class MySqlConnection {
 	 * Database parameters and logger
 	 */
 
-	public static Connection getConnection() {
+	public Connection getConnection() {
 		/**
 		 * connection to the database method.
 		 */

@@ -18,7 +18,7 @@ public class MainLinks {
 	 * @throws ParseException
 	 * @throws SQLException
 	 */
-	Connection con = MySqlConnection.getConnection();
+	Connection con = new MySqlConnection().getConnection();
 
 	public ArrayList<String> AnalyseLiens() throws ParseException, SQLException {
 		/**

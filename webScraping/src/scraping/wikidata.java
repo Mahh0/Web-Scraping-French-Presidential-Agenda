@@ -21,12 +21,11 @@ public class wikidata {
 	private static Logger logger = LogManager.getLogger(wikidata.class);
 	static String id;
 
-    public static String wikidata(String nom, String prenom) throws UnsupportedEncodingException {
+    public static String wikidata(String nom) throws UnsupportedEncodingException {
 		// First request
 		String baseurl = "https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srlimit=1&srsearch=";
-		String query = prenom + "+" + nom;
-		query = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
-		String request = baseurl + query;
+		nom = URLEncoder.encode(nom, StandardCharsets.UTF_8.toString());
+		String request = baseurl + nom;
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest httprequest = HttpRequest.newBuilder().uri(URI.create(request)).build();
 		String respfirstrequest = client.sendAsync(httprequest, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenApply(wikidata::parse1).join();
@@ -42,7 +41,7 @@ public class wikidata {
 			String respsecondrequest = client.sendAsync(request2, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenApply(wikidata::parse2).join();
 			return respsecondrequest;
 		} else {
-			return null;
+			return "";
 		}
 		/**
 		 * If we got a name from the first json analysis, we build the second request using the name that we got from first json, and then we call parse2 method
@@ -87,7 +86,7 @@ public class wikidata {
 				return id;
 			} catch (Exception ex) {
 				logger.error("Wikidata ID not found");
-				return null;
+				return "";
 			}
 			/**
 			 * Analyzing the JSON response from the query with the name, and getting the WIKIDATA ID.

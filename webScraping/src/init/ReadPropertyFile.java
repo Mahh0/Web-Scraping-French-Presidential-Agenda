@@ -12,7 +12,11 @@ public class ReadPropertyFile {
      */
 
     private static Logger logger = LogManager.getLogger(ReadPropertyFile.class);
-    private String user, userpw, host, port, database;
+    private static String user;
+    private static String userpw;
+    private static String host;
+    private static String port;
+    private String database;
     private static String databaseCleanup, useLocalHtml, localfilesCleanup;
     /**
      * Creating a logger and defining the variables that will be used for the properties.
@@ -43,19 +47,19 @@ public class ReadPropertyFile {
         }
     }
 
-    public String getUser() {
+    public static String getUser() {
         return user;
     }
 
-    public String getUserpw() {
+    public static String getUserpw() {
         return userpw;
     }
 
-    public String getHost() {
+    public static String getHost() {
         return host;
     }
 
-    public String getPort() {
+    public static String getPort() {
         return port;
     }
 
