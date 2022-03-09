@@ -23,8 +23,7 @@
 
 This project is a project for the semesters 3 & 4 for <a href="https://iut-blois.univ-tours.fr/version-francaise/formations/dut-reseaux-et-telecommunications">IUT R&T Of Blois</a>
 
-The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. We will use Java and Eclipse/VSCode plus  <a href="https://jsoup.org/">Jsoup Library</a>
-After scraping datas, they are put in a <a href="https://www.mysql.com/fr/">MySql Database</a>, running on the computer where the program is.
+The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. This projects was built with VSCode, Java, <a href="https://jsoup.org/">Jsoup Library</a> and a <a href="https://www.mysql.com/fr/">MySql Database</a>.
 
 ### Built With
 
@@ -34,27 +33,30 @@ After scraping datas, they are put in a <a href="https://www.mysql.com/fr/">MySq
 * [MySQL and JDBC](https://dev.mysql.com/downloads/)
 
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-Download the source code for Windows or Linux and open it in Eclipse.
-
 ### Prerequisites
+VSCode
+MySQL Database
 
-All you need is included in the archive that you can download. You just need git to clone the repo (or manually do it).
+### Installation (Windows and Linux)
+
+1. Unzip the files or clone in a good location.
 * git
   ```sh
   git clone https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda
   ```
 
-### Installation (Windows and Linux)
+2. Install the MySQL Database. A MySQL dump is provided in ```Web-Scraping-Of-Presidential-Agenda\webScraping\src\main\resources```
+```sh
+cd "Web-Scraping-Of-Presidential-Agenda\webScraping\src\main\resources"
+mysql -u root -p
+  create database webscraping;
+  exit
+mysql -u root -p webscraping < MySQL_DUMP.sql
+```
 
-1. Unzip the files
+3. Be sure that you have maven and java configured on VSCode.
 
-2. Run the script. It will launch the java program and the database ... 
-   ```sh
-   ./main.java
-   ```
+4. Enjoy
 
 
 <!-- ROADMAP -->

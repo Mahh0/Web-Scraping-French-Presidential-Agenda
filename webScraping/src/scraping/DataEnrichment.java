@@ -218,7 +218,6 @@ public class DataEnrichment {
 				String idpersonne = wikidata.wikidata(person);
 
 				if (!idpersonne.isEmpty()) {
-					logger.debug("I found an ID ! it is " + idpersonne + " for the person" + person);
 
 					PreparedStatement checkForQ = con.prepareStatement("SELECT id FROM personne WHERE wikidataid = (?) ");
 					checkForQ.setString(1, idpersonne);
@@ -230,7 +229,6 @@ public class DataEnrichment {
 					// Checking if we already have insert this person in personne table
 
 					if (id == 0) { // If we have not inserted a row in personne table yet, we will nsert in personne and then in presence
-						logger.debug("LA PERSONNE N'A JAMAIS ETE INSEREE");
 						PreparedStatement insertpersonne = con.prepareStatement("INSERT INTO personne(wikidataid) VALUES (?)");
 						insertpersonne.setString(1, idpersonne);
 						insertpersonne.executeUpdate();

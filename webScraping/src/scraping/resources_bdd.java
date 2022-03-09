@@ -2,6 +2,7 @@ package scraping;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -14,6 +15,7 @@ import init.MySqlConnection;
 import init.SSLHelper;
 
 public class resources_bdd {
+	int idRessource=0;
 	/**
 	 * This class is used for external links, it contains 1 class : insertionsressources.
 	 */
@@ -33,7 +35,9 @@ public class resources_bdd {
 		 * 		- currentEventID : to insert
 		 */
 		
-			for (Element lienu : externallinkslist) {		
+		
+			for (Element lienu : externallinkslist) {
+				try {	
 				final Document docU = SSLHelper.getConnection(lienu.absUrl("href")).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(1000000).get();
 				resources_scraping ext = new resources_scraping(docU);
 				ArrayList<String> PdfsTest = ext.getPdf();
@@ -49,10 +53,6 @@ public class resources_bdd {
 				 * For each link in the links list, we will make a GET request to the link, and then we will 
 				 * instantiate ressources_scraping method with the document and then call each method.
 				 */
-			
-				PreparedStatement psLien = con.prepareStatement("INSERT INTO ressources (idTable, url, categorie, contenu) values (?,?,?,?)");
-				psLien.setInt(1, currentEventID);
-				// Preparing inserts.
 				
 				boolean isEmptyIMG = ImgsTest.isEmpty();
 				boolean isEmptyPDF = PdfsTest.isEmpty();
@@ -65,29 +65,50 @@ public class resources_bdd {
 				/**
 				 * Boolean values to know if the returns of the above methods are empty or not.
 				 */
+
+				 PreparedStatement testIfLinksExists = con.prepareStatement("SELECT id FROM ressources WHERE url = (?)");
+				 testIfLinksExists.setString(1, lienu.absUrl("href"));
+				 ResultSet rtest = testIfLinksExists.executeQuery();
+				 while (rtest.next()) {
+					 idRessource = rtest.getInt("id");
+				 }
+
+
+				 /**
+				  * On teste si le lien a déjà été inséré dans la table ressource
+				  */
 				
-				if ((isEmptyTwitterArray == true)&&(isEmptyHashtableInsertionsArray==true)&&(isEmptyPDF == true)&&(isEmptyVidDaily == true)&&(isEmptyVidYtb == true)&&(tex == "")&&(isEmptyIMG == true)&&(isEmptyinstaArray == true)&&(isEmptyfolderArray == true)) {
-					final String insertionlienVide = "INSERT INTO ressources (idTable, url) values (?,?)";
-					PreparedStatement psLienVide = con.prepareStatement(insertionlienVide);
-					psLienVide.setInt(1, currentEventID);
-					psLienVide.setString(2, lienu.absUrl("href"));
-					psLienVide.executeUpdate();
-					psLienVide.close();
-					/**
-					 * If everything is empty, an empty link in ressources will be inserted.
-					 */
-				} else {
-					/**
-					 * Else, we will test for each content type (pdf, img, ytb, ...) 
-					 * if it is not empty, and if it is, we will add it in the database.
-					 */
-				if (isEmptyPDF == false) {	
+				 if (rtest.next() == false) { // Si le lien n'a pas encore été inséré
+					PreparedStatement insertRessource = con.prepareStatement("INSERT INTO ressources(idTable, url) values (?, ?)");
+					insertRessource.setInt(1, currentEventID);
+					insertRessource.setString(2, lienu.absUrl("href"));
+					insertRessource.executeUpdate();
+					insertRessource.close();
+
+					PreparedStatement recupidInsertRessource = con.prepareStatement("SELECT id FROM ressources WHERE idTable = (?) and url = (?)");
+					recupidInsertRessource.setInt(1, currentEventID);
+					recupidInsertRessource.setString(2, lienu.absUrl("href"));
+					ResultSet recupId = recupidInsertRessource.executeQuery();
+					while (recupId.next()) {
+						idRessource = recupId.getInt("id");
+					  }
+					recupId.close();
+					recupidInsertRessource.close();
+
+				// On insert une ligne dans ressource avec le lien puis on récupère l'id de cette ligne.
+				  
+				  }
+				
+				  // A l'aide de l'ID récupérer précédement, on peut maintenant tester si la ressource a des données, si elle en a, il y a insertion
+				if (!isEmptyPDF) {	
 					PdfsTest.forEach((o) -> {
 						try {
-							psLien.setString(2, lienu.absUrl("href"));
-							psLien.setString(3, "PDF");
-							psLien.setString(4, o);
-							psLien.executeUpdate();
+							PreparedStatement insertpdf = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, contenu) VALUES(?, ?, ?)");
+							insertpdf.setInt(1, idRessource);
+							insertpdf.setString(2, "PDF");
+							insertpdf.setString(3, o);
+							insertpdf.executeUpdate();
+							insertpdf.close();
 						} catch (SQLException e) {
 							logger.error("SQL Error while PDF insert !" + e);
 						}
@@ -97,14 +118,17 @@ public class resources_bdd {
 						 */
 				}
 				
-				if (isEmptyVidDaily == false) {
+				if (!isEmptyVidDaily) {
 
 					vidDaily.forEach((o) -> {
 						try {
-							psLien.setString(2, lienu.absUrl("href"));
-							psLien.setString(3, "VID");
-							psLien.setString(4, o);
-							psLien.executeUpdate();
+							PreparedStatement insertviddaily = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, `sous-categorie`, contenu) VALUES(?, ?, ?, ?)");
+							insertviddaily.setInt(1, idRessource);
+							insertviddaily.setString(2, "VIDEO");
+							insertviddaily.setString(3, "Dailymotion");
+							insertviddaily.setString(4, o);
+							insertviddaily.executeUpdate();
+							insertviddaily.close();
 						} catch (SQLException e) {
 							logger.error("SQL Error while Dailymotion insert !" + e);
 						}
@@ -114,15 +138,17 @@ public class resources_bdd {
 						 */
 				}
 				
-				if (isEmptyVidYtb == false) {
+				if (!isEmptyVidYtb) {
 					vidYtb.forEach((o) -> {
 						try {
-							psLien.setString(2, lienu.absUrl("href"));
-							psLien.setString(3, "VID");
-							psLien.setString(4, o);
-							psLien.executeUpdate();
+							PreparedStatement insertvidytb = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, `sous-categorie`, contenu) VALUES(?, ?, ?, ?)");
+							insertvidytb.setInt(1, idRessource);
+							insertvidytb.setString(2, "VIDEO");
+							insertvidytb.setString(3, "Youtube");
+							insertvidytb.setString(4, o);
+							insertvidytb.executeUpdate();
+							insertvidytb.close();
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							logger.error("SQL Error while Youtube insert !" + e);
 						}
 						});
@@ -133,26 +159,29 @@ public class resources_bdd {
 				
 				
 				if (tex != "") {
-					psLien.setString(2, lienu.absUrl("href"));
-					psLien.setString(3, "TXT");
-					if (tex.length()<=16777215)
-						{
-							psLien.setString(4, tex);
-						}
-					psLien.executeUpdate();
+					PreparedStatement inserttxt = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, contenu) VALUES(?, ?, ?)");
+					inserttxt.setInt(1, idRessource);
+					inserttxt.setString(2, "TEXTE");
+					inserttxt.setString(3, tex);
+					inserttxt.executeUpdate();
+					inserttxt.close();
+					// if (tex.length()<=16777215)
+			
 					/**
 					 * If string contains text, we insert in the database a row with TEXT.
 					 */
 				}
 				
 				
-				if (isEmptyIMG == false){
+				if (!isEmptyIMG){
 					ImgsTest.forEach((n) -> {
 					try {
-						psLien.setString(2, lienu.absUrl("href"));
-						psLien.setString(3, "IMG");
-						psLien.setString(4, n);
-						psLien.executeUpdate();
+						PreparedStatement insertimg = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, contenu) VALUES(?, ?, ?)");
+						insertimg.setInt(1, idRessource);
+						insertimg.setString(2, "IMG");
+						insertimg.setString(3, n);
+						insertimg.executeUpdate();
+						insertimg.close();
 					} catch (SQLException e) {
 						logger.error("SQL Error while Image insert !" + e);
 					}
@@ -162,26 +191,32 @@ public class resources_bdd {
 					 */
 				}
 				
-				if (isEmptyTwitterArray == false){
+				if (!isEmptyTwitterArray){
 					TwitterArray.forEach((n) -> {
 					try {
-						psLien.setString(2, lienu.absUrl("href"));
-						psLien.setString(3, "TWI");
-						psLien.setString(4, n);
-						psLien.executeUpdate();
+						PreparedStatement inserttwitter = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, `sous-categorie`, contenu) VALUES(?, ?, ?, ?)");
+						inserttwitter.setInt(1, idRessource);
+						inserttwitter.setString(2, "MEDIA");
+						inserttwitter.setString(3, "Twitter");
+						inserttwitter.setString(4, n);
+						inserttwitter.executeUpdate();
+						inserttwitter.close();
 					} catch (SQLException e) {
 						logger.error("SQL Error while twitter insert !" + e);
 					}
 					});
 				}
 				
-				if (isEmptyinstaArray == false){
+				if (!isEmptyinstaArray){
 					instaArray.forEach((n) -> {
 					try {
-						psLien.setString(2, lienu.absUrl("href"));
-						psLien.setString(3, "insta");
-						psLien.setString(4, n);
-						psLien.executeUpdate();
+						PreparedStatement insertinsta = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, `sous-categorie`, contenu) VALUES(?, ?, ?, ?)");
+						insertinsta.setInt(1, idRessource);
+						insertinsta.setString(2, "MEDIA");
+						insertinsta.setString(3, "Instagram");
+						insertinsta.setString(4, n);
+						insertinsta.executeUpdate();
+						insertinsta.close();
 					} catch (SQLException e) {
 						logger.error("SQL Error while instagram insert !" + e);
 					}
@@ -189,40 +224,44 @@ public class resources_bdd {
 					});		
 				}
 
-				if (isEmptyHashtableInsertionsArray == false){
-					PreparedStatement psLienInsertions = con.prepareStatement("INSERT INTO ressources (idTable, url, categorie, `sous-categorie`, contenu) values (?,?,?,?,?)");
+				if (!isEmptyHashtableInsertionsArray){
 					insertionsArray.forEach((n, n2) -> {
 					try {
-						psLienInsertions.setInt(1, currentEventID);
-						psLienInsertions.setString(2, lienu.absUrl("href"));
-						psLienInsertions.setString(3, "insertions");
-						psLienInsertions.setString(4, n);
-						psLienInsertions.setString(5, n2);
-						psLienInsertions.executeUpdate();
+						PreparedStatement insertlienindirect = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, contenu) VALUES(?, ?, ?)");
+						insertlienindirect.setInt(1, idRessource);
+						insertlienindirect.setString(2, "LIEN_INDIRECTE");
+						insertlienindirect.setString(3, n + " - " + n2);
+						insertlienindirect.executeUpdate();
+						insertlienindirect.close();
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
 					});	
-					psLienInsertions.close();
 				}
 				
-				if (isEmptyfolderArray == false){
+
+				if (!isEmptyfolderArray){
 					folderArray.forEach((n) -> {
 						try {
-							psLien.setString(2, lienu.absUrl("href"));
-							psLien.setString(3, "dossier");
-							psLien.setString(4, n);
-							psLien.executeUpdate();
+							PreparedStatement insertdossier = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, contenu) VALUES((?), (?), (?))");
+							insertdossier.setInt(1, idRessource);
+							insertdossier.setString(2, "DOSSIER");
+							insertdossier.setString(3, n);
+							insertdossier.executeUpdate();
+							insertdossier.close();
 						} catch (SQLException e) {
 							logger.error("SQL Error while instagram insert !" + e);
 						}
 						});	
 				}
+			}  catch (IOException ioe) {
+				logger.error("IOException while connecting to the page");
+				logger.error(ioe);
 			}
-			psLien.close();
+				}
+			
+			}
 		}
-		}
-	}
 
 
 

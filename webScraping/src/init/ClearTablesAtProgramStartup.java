@@ -17,6 +17,7 @@ public class ClearTablesAtProgramStartup {
 
 	public ClearTablesAtProgramStartup() {
 				try {
+					PreparedStatement dl0 = con.prepareStatement("DELETE FROM ressource_detail");
 					PreparedStatement dl1 = con.prepareStatement("DELETE FROM ressources USING ressources INNER JOIN evenement ON evenement.id=ressources.idTable;");
 					PreparedStatement dl2 = con.prepareStatement("DELETE FROM presence USING presence INNER JOIN personne ON personne.id=presence.idpersonne;");
 					PreparedStatement dl3 = con.prepareStatement("DELETE FROM presence");
@@ -25,10 +26,11 @@ public class ClearTablesAtProgramStartup {
 					PreparedStatement auto_inc2 = con.prepareStatement("ALTER TABLE presence AUTO_INCREMENT = 1");
 					PreparedStatement auto_inc3 = con.prepareStatement("ALTER TABLE personne AUTO_INCREMENT = 1");
 					PreparedStatement auto_inc4 = con.prepareStatement("ALTER TABLE evenement AUTO_INCREMENT = 1");
-					dl1.executeUpdate(); dl2.executeUpdate(); dl3.executeUpdate(); dl4.executeUpdate();
-					dl1.close(); dl2.close(); dl3.close(); dl4.close(); 
-					auto_inc1.executeUpdate(); auto_inc2.executeUpdate(); auto_inc3.executeUpdate(); auto_inc4.executeUpdate();
-					auto_inc1.close(); auto_inc2.close(); auto_inc3.close(); auto_inc4.close();
+					PreparedStatement auto_inc5 = con.prepareStatement("ALTER TABLE ressource_detail AUTO_INCREMENT = 1");
+					dl0.executeUpdate(); dl1.executeUpdate(); dl2.executeUpdate(); dl3.executeUpdate(); dl4.executeUpdate();
+					dl1.close(); dl2.close(); dl3.close(); dl4.close(); dl0.close();
+					auto_inc1.executeUpdate(); auto_inc2.executeUpdate(); auto_inc3.executeUpdate(); auto_inc4.executeUpdate(); auto_inc5.executeUpdate();
+					auto_inc1.close(); auto_inc2.close(); auto_inc3.close(); auto_inc4.close(); auto_inc5.close();
 					logger.info("Database cleaned !");
 					con.close();
 				} catch (SQLException e) {

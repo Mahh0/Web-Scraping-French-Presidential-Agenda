@@ -97,7 +97,7 @@ public class MainLinks {
 				if (nb == 0) {
 					if (years.get(test) == 2017 && (currentmonth == "janvier" || currentmonth == "février" || currentmonth == "mars" || currentmonth == "avril")) {
 					} else {
-					liens.add("http://www.elysee.fr/agenda-" + currentmonthnormalized + "-" + years.get(test)); // we add the link to the table
+					liens.add("https://www.elysee.fr/agenda-" + currentmonthnormalized + "-" + years.get(test)); // we add the link to the table
 					
 					String deleteReq = "DELETE re FROM evenement ev JOIN ressources re ON re.idTable=ev.id WHERE ev.dated > '"
 							+ i + "-" + CurrenttMonthFormat
