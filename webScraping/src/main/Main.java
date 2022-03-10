@@ -126,7 +126,7 @@ public class Main {
 						if (input.exists() == true) {
 							doc = Jsoup.parse(input, "UTF-8");
 						} else {
-							doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).get();
+							doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).followRedirects(false).get();
 							if (link.toString()!= "http://www.elysee.fr/agenda-" + cmonthWaccent + "-" + cyear) { // while the link is not equal to current month
 								try {
 								docToLocalHtml.downloadPage(doc.outerHtml(), link.toString()); // download the page
@@ -138,7 +138,7 @@ public class Main {
 						}
 					break;
 				case "no": // We do not wan't to use local html files
-						doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).get();
+						doc = SSLHelper.getConnection(link.toString()).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(50000).followRedirects(false).get();
 					break;
 				default:
 						logger.error("Error in parameters files, yes or no in uselocalhtml parameter !");
