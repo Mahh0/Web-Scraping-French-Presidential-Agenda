@@ -38,7 +38,7 @@ public class resources_bdd {
 		
 			for (Element lienu : externallinkslist) {
 				try {	
-				final Document docU = SSLHelper.getConnection(lienu.absUrl("href")).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(1000000).followRedirects(false).get();
+				final Document docU = SSLHelper.getConnection(lienu.absUrl("href")).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").timeout(1000000).get();
 				resources_scraping ext = new resources_scraping(docU);
 				ArrayList<String> PdfsTest = ext.getPdf();
 				ArrayList<String> vidYtb = ext.getVidYtb();
