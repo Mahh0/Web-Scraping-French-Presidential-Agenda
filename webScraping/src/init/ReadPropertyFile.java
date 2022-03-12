@@ -1,4 +1,5 @@
 package init;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -7,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 public class ReadPropertyFile {
     /**
-     * ReadyPropertyFile method reads properties from the file and put it in string variables.
-     * Then the properties are return through get methods.
+     * ReadyPropertyFile method reads properties from the file.
+     * Then the properties are returned through get methods.
      */
 
     private static Logger logger = LogManager.getLogger(ReadPropertyFile.class);
@@ -16,20 +17,24 @@ public class ReadPropertyFile {
     private static String userpw;
     private static String host;
     private static String port;
-    private String database;
+    private static String database;
     private static String databaseCleanup, useLocalHtml, localfilesCleanup;
+
     /**
-     * Creating a logger and defining the variables that will be used for the properties.
+     * Creating a logger and defining the variables that will be used for the
+     * properties.
      */
 
     public void readProps() {
         try {
             Properties prop = new Properties(); // Object of Properties class
-            FileInputStream ip = new FileInputStream("webScraping/src/main/resources/config.properties"); // Say to the program where is the properties file
-            prop.load(ip);
-            /**
-             * Instantiating Properties as prop, saying to the program where is located the properties files through a FileInputStream and loading the Fip though properties class
-             */
+            FileInputStream ip = new FileInputStream("webScraping/src/main/resources/config.properties"); // Say to the
+                                                                                                          // program
+                                                                                                          // where is
+                                                                                                          // the
+                                                                                                          // properties
+                                                                                                          // file
+            prop.load(ip); // Loading the file through prop (instance of Properties)
 
             user = prop.getProperty("user");
             userpw = prop.getProperty("userpw");
@@ -42,8 +47,10 @@ public class ReadPropertyFile {
             /**
              * Assigning properties from the file to variables.
              */
+
         } catch (IOException e) {
             logger.error("Error while reading the properties file !");
+            logger.error(e);
         }
     }
 
@@ -71,15 +78,15 @@ public class ReadPropertyFile {
         return databaseCleanup;
     }
 
-    public static String getUseLocalHtml(){
+    public static String getUseLocalHtml() {
         return useLocalHtml;
     }
 
-    public static String getLocalfilesCleanup(){
+    public static String getLocalfilesCleanup() {
         return localfilesCleanup;
     }
 
     /**
-     * Differents get methods to get into another classes the properties.
+     * Differents get methods to get the properties from other classes.
      */
 }

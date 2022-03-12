@@ -26,26 +26,26 @@ import org.apache.commons.lang3.*;
 public class Main {
 	private static Logger logger = LogManager.getLogger(Main.class);
 	public static void main(String[] args) throws Exception {
-		logger.info("Starting the program. Firewall must be set to OFF if you wan't to use a remote SQL Server !");
+		logger.info("Starting the program.");
+		logger.info("Firewall must be set to OFF if you wan't to use a remote SQL Server !");
 		MySqlConnection.setParameters();
 		Connection con = new MySqlConnection().getConnection();
 		/**
 		 * Call of the setParameters method from MySqlConnection which set database parameters and others, using config.properties file.
+		 * 
+		 * Instantiating a connection (con) to MySql Database using getConnection method from MySqlConnection class
+		 * 		This connection is used in the classes in which we need interactions with database.
+		 * 		It uses ReadPropertyFile class.
 		 */
 
-		/**
-		 * Instantation of a Connection con that uses getConnection from MySqlConnection
-		 * It is used in the classes where we need interactions with the database
-		 * It uses ReadPropertyFile methods values.
-		 */
 
 		 switch (ReadPropertyFile.getDatabasecleanup()) {
 			 case "true":
-				logger.info("Parameter \"true\" found in properties file for databaseCleanup, cleaning it !");
+				logger.info("Value \"true\" found in properties file for the parameter databaseCleanup. Cleaning database...");
 			 	new ClearTablesAtProgramStartup();
 			 	break;
 			case "false":
-				logger.info("Parameter \"false\" found in properties file for databaseCleanup, nothing done !");
+				logger.info("Value \"false\" found in properties file for the parameter databaseCleanup. Nothing happening...");
 				break;
 			default:
 				logger.info("Incorrect parameter for Databasecleanup, please correct it !");
@@ -55,16 +55,17 @@ public class Main {
 		  * This asks through the parameter in the config file to the user if he want's to clear the tables. If yes, it is cleaned, if no, no, if not yes or no, exit program (error)
 		  */
 	
+
 		  switch (ReadPropertyFile.getLocalfilesCleanup()) {
 			case "true":
-				logger.info("Files will not be kept, localfilesParameters set to false !");
+				logger.info("Files will not be kept (localfiles parameter set to false !)");
 				File dir = new File("webScraping/src/main/resources/htmlAgenda");
 				for(File file: dir.listFiles()) 
 				if (!file.isDirectory()) 
 				file.delete();
 			 	break;
 			case "false":
-				logger.info("Files will be kept, localfilesCleanup parameter set to true");
+				logger.info("Files will be kept (localfilesCleanup parameter set to true !)");
 				break;
 			default:
 				logger.error("Incorrect parameter found ! Please correct it");
@@ -74,6 +75,7 @@ public class Main {
 		   * Reading "LocalfilesCleanup into config file. If it is set to true, files will not be kept, so deleted, if false they are keep, else error parameter incorrect"
 		   */
 
+
 		LocalDate currentdate = LocalDate.now();
         String cyear = currentdate.format(DateTimeFormatter.ofPattern("yyyy"));
         String cmonth = currentdate.format(DateTimeFormatter.ofPattern("MMMM", Locale.FRENCH));
@@ -81,6 +83,7 @@ public class Main {
 		/**
 		 * Getting current month and year (this will be useful, particulary to not download the current 
 		 * month page, because it is in progress so if there is content being added we will not get it)
+		 * Also getting a month without accent, it will be useful for links.
 		 */
 
 		MainLinks links = new MainLinks();

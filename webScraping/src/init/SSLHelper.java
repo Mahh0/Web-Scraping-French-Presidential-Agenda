@@ -1,4 +1,5 @@
 package init;
+
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -11,17 +12,19 @@ import org.jsoup.Jsoup;
 
 public class SSLHelper {
     /**
-     * SSLHelper is a class which permits the connections to the website with SSL certificates.
+     * SSLHelper is a class which permits the connections to the website with SSL
+     * certificates.
+     * 
      * @param url
      * @return
      */
 
-	static public Connection getConnection(String url){
+    static public Connection getConnection(String url) {
         return Jsoup.connect(url).sslSocketFactory(SSLHelper.socketFactory());
     }
 
     static private SSLSocketFactory socketFactory() {
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                 return new X509Certificate[0];
             }
@@ -31,7 +34,7 @@ public class SSLHelper {
 
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
             }
-        }};
+        } };
 
         try {
             SSLContext sslContext = SSLContext.getInstance("SSL");
@@ -44,5 +47,3 @@ public class SSLHelper {
         }
     }
 }
-
-
