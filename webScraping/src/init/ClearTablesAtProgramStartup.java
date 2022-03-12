@@ -1,50 +1,74 @@
 package init;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ClearTablesAtProgramStartup {
 	/**
-	 * When the config.properties parameters is set to yes, this class will delete contents from all the tables and reset their auto-incement.
+	 * When the config.properties parameters is set to yes, this class will delete
+	 * contents from all the tables and reset their auto-incement.
 	 */
 	private static Logger logger = LogManager.getLogger(ClearTablesAtProgramStartup.class);
 	Connection con = new MySqlConnection().getConnection();
+
 	/**
 	 * Defining a logger and a mysql connection.
+	 * 
+	 * @throws SQLException
 	 */
 
-	public ClearTablesAtProgramStartup() {
-				try {
-					PreparedStatement dl0 = con.prepareStatement("DELETE FROM ressource_detail");
-					PreparedStatement dl1 = con.prepareStatement("DELETE FROM ressources USING ressources INNER JOIN evenement ON evenement.id=ressources.idTable;");
-					PreparedStatement dl2 = con.prepareStatement("DELETE FROM presence USING presence INNER JOIN personne ON personne.id=presence.idpersonne;");
-					PreparedStatement dl3 = con.prepareStatement("DELETE FROM presence");
-					PreparedStatement dl4 = con.prepareStatement("DELETE FROM evenement");
-					PreparedStatement auto_inc1 = con.prepareStatement("ALTER TABLE ressources AUTO_INCREMENT = 1");
-					PreparedStatement auto_inc2 = con.prepareStatement("ALTER TABLE presence AUTO_INCREMENT = 1");
-					PreparedStatement auto_inc3 = con.prepareStatement("ALTER TABLE personne AUTO_INCREMENT = 1");
-					PreparedStatement auto_inc4 = con.prepareStatement("ALTER TABLE evenement AUTO_INCREMENT = 1");
-					PreparedStatement auto_inc5 = con.prepareStatement("ALTER TABLE ressource_detail AUTO_INCREMENT = 1");
-					dl0.executeUpdate(); dl1.executeUpdate(); dl2.executeUpdate(); dl3.executeUpdate(); dl4.executeUpdate();
-					dl1.close(); dl2.close(); dl3.close(); dl4.close(); dl0.close();
-					auto_inc1.executeUpdate(); auto_inc2.executeUpdate(); auto_inc3.executeUpdate(); auto_inc4.executeUpdate(); auto_inc5.executeUpdate();
-					auto_inc1.close(); auto_inc2.close(); auto_inc3.close(); auto_inc4.close(); auto_inc5.close();
-					logger.info("Database cleaned !");
-					con.close();
-				} catch (SQLException e) {
-					logger.error("Error while cleaning tables; SQL Error ! " + e);
-				} catch (Exception e) {
-					logger.error("Unexpected error" + e);
-				}
-				/**
-				 * Instantiating a MySQL conn through getConnection; 
-				 * making the delete and auto_increment resets preparedStatements, executing and closing connection.
-				 */
+	public ClearTablesAtProgramStartup() throws SQLException {
+
+		try {
+			PreparedStatement disableFK = con.prepareStatement("SET FOREIGN_KEY_CHECKS=0;");
+			disableFK.executeUpdate();
+			disableFK.close();
+		} catch (SQLException e) {
+			logger.error("Error while setting fk_checks to 0 ; SQL Error ! " + e);
+		} catch (Exception e) {
+			logger.error("Unexpected error" + e);
+		}
+		// Disabling foreign keys check to delete from tables without any problem
+
+		ArrayList<String> tables = new ArrayList<String>();
+		List<String> listeTables = Arrays.asList("ressource_detail", "ressources", "personne", "presence", "evenement");
+		tables.addAll(listeTables);
+		tables.forEach((o) -> {
+			try {
+				PreparedStatement delete = con.prepareStatement("DELETE FROM " + o);
+				delete.executeUpdate();
+				PreparedStatement resetai = con.prepareStatement("ALTER TABLE " + o + " AUTO_INCREMENT = 1");
+				resetai.executeUpdate();
+				delete.close();
+				resetai.close();
+			} catch (SQLException e) {
+				logger.error("Error while cleaning tables; SQL Error ! " + e);
+			} catch (Exception e) {
+				logger.error("Unexpected error" + e);
+			}
+		});
+		logger.info("Database cleaned !");
+		// For each table, delete the rows and reset the auto increment to 1.
+
+		try {
+			PreparedStatement enableFK = con.prepareStatement("SET FOREIGN_KEY_CHECKS=1;");
+			enableFK.executeUpdate();
+			enableFK.close();
+		} catch (SQLException e) {
+			logger.error("Error while re-enabling foreign keys checks !");
+			logger.error(e);
+		} catch (Exception e) {
+			logger.error("Unexpected error" + e);
+		}
+		// Re-enabling the foreign keys checks.
+
+		con.close();
 	}
 }
-
-
-
-
