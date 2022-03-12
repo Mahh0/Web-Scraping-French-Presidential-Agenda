@@ -12,7 +12,11 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MainLinks {
+	private static Logger logger = LogManager.getLogger(MainLinks.class);
 	/**
 	 * This class creates links used for the analysis of the presidential agenda. It creates only the links needed.
 	 * @throws ParseException
@@ -99,21 +103,18 @@ public class MainLinks {
 					} else {
 					liens.add("https://www.elysee.fr/agenda-" + currentmonthnormalized + "-" + years.get(test)); // we add the link to the table
 					
-					String deleteReq = "DELETE re FROM evenement ev JOIN ressources re ON re.idTable=ev.id WHERE ev.dated > '"
-							+ i + "-" + CurrenttMonthFormat
-							+ "-01 00:00:00' AND ev.dated < '" + i + "-"
-							+ NextMonthFormat + "-01 00:00:00';";
-					String deleteReq2 = "DELETE ev FROM evenement ev JOIN ressources re ON re.idTable=ev.id WHERE ev.dated > '"
-							+ i + "-" + CurrenttMonthFormat
-							+ "-01 00:00:00' AND ev.dated < '" + i + "-"
-							+ NextMonthFormat + "-01 00:00:00';";
+					PreparedStatement disableFkCheck = con.prepareStatement("SET FOREIGN_KEY_CHECKS=0");
+					String requestString = "DELETE FROM evenement, presence, ressource_detail, ressources USING ressources INNER JOIN ressource_detail ON ressources.id=ressource_detail.idressources INNER JOIN evenement ON evenement.id=ressources.idTable INNER JOIN presence ON evenement.id=presence.idevenement WHERE evenement.dated > ? AND evenement.dated < ? ";
+					PreparedStatement deleteReq = con.prepareStatement(requestString);
+					String date1 = i + "-" + CurrenttMonthFormat + "-01 00:00:00";
+					String date2 = i + "-" + NextMonthFormat + "-01 00:00:00";
+					deleteReq.setString(1, date1);
+					deleteReq.setString(2, date2);
+					PreparedStatement enableFkChecks = con.prepareStatement("SET FOREIGN_KEY_CHECKS=1");
 
-					PreparedStatement psE = con.prepareStatement(deleteReq);
-					PreparedStatement psE2 = con.prepareStatement(deleteReq2);
-					psE.executeUpdate();
-					psE2.executeUpdate();
-					psE.close();
-					psE2.close();
+					disableFkCheck.executeUpdate();
+					deleteReq.executeUpdate();
+					enableFkChecks.executeUpdate();
 					}
 					
 					
