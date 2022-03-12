@@ -158,14 +158,14 @@ public class resources_bdd {
 				}
 				
 				
-				if (tex != "") {
+				if (tex != "" && tex.length()<=16777215) {
 					PreparedStatement inserttxt = con.prepareStatement("INSERT INTO ressource_detail(idressources, categorie, contenu) VALUES(?, ?, ?)");
 					inserttxt.setInt(1, idRessource);
 					inserttxt.setString(2, "TEXTE");
 					inserttxt.setString(3, tex);
 					inserttxt.executeUpdate();
 					inserttxt.close();
-					// if (tex.length()<=16777215)
+					
 			
 					/**
 					 * If string contains text, we insert in the database a row with TEXT.
