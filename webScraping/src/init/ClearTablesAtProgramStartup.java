@@ -16,12 +16,7 @@ public class ClearTablesAtProgramStartup {
 	 */
 	private static Logger logger = LogManager.getLogger(ClearTablesAtProgramStartup.class);
 	Connection con = new MySqlConnection().getConnection();
-
-	/**
-	 * Defining a logger and a mysql connection.
-	 * 
-	 * @throws SQLException
-	 */
+	// Defining logger and MySQL Conn to interact with DB
 
 	public ClearTablesAtProgramStartup() throws SQLException {
 
@@ -54,7 +49,7 @@ public class ClearTablesAtProgramStartup {
 			}
 		});
 		logger.info("Database cleaned !");
-		// For each table, delete the rows and reset the auto increment to 1.
+		// For each table in the ArrayList tables, delete the content and reset the auto increment to 1.
 
 		try {
 			PreparedStatement enableFK = con.prepareStatement("SET FOREIGN_KEY_CHECKS=1;");
@@ -66,7 +61,7 @@ public class ClearTablesAtProgramStartup {
 		} catch (Exception e) {
 			logger.error("Unexpected error" + e);
 		}
-		// Re-enabling the foreign keys checks.
+		// Re-enable the foreign keys checks.
 
 		con.close();
 	}

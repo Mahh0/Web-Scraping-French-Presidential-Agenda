@@ -28,12 +28,9 @@ public class ReadPropertyFile {
     public void readProps() {
         try {
             Properties prop = new Properties(); // Object of Properties class
-            FileInputStream ip = new FileInputStream("webScraping/src/main/resources/config.properties"); // Say to the
-                                                                                                          // program
-                                                                                                          // where is
-                                                                                                          // the
-                                                                                                          // properties
-                                                                                                          // file
+            FileInputStream ip = new FileInputStream("webScraping/src/main/resources/config.properties");
+            // Create a Properties object, and say with FileInputStream where is located the properties file.
+
             prop.load(ip); // Loading the file through prop (instance of Properties)
 
             user = prop.getProperty("user");

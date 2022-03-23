@@ -20,12 +20,8 @@ public class DataEnrichment {
 	 */
 	Connection con = new MySqlConnection().getConnection();
 	private static Logger logger = LogManager.getLogger(DataEnrichment.class);
+	// Initializing a logger and a MySQL Database con to interract with.
 
-	/**
-	 * Initializing a logger and the static mysql connection.
-	 * 
-	 * @param eventtype
-	 */
 
 	public void typeEnrich(String entitled, String eventtype, int currentEventID) {
 		/**
@@ -204,6 +200,8 @@ public class DataEnrichment {
 			Matcher m;
 			p = Pattern.compile("(M\\.|Mme) (([A-Z])[a-z\\W]+)+ ([A-Z\\W]+)+[,.]");
 			m = p.matcher(entitled);
+			// Defining a pattern (expression to find in something) and a matcher (the "something"
+			// which is the entitled)
 
 			while (m.find()) { // If regex found pattern
 				String person = m.group();
@@ -211,8 +209,8 @@ public class DataEnrichment {
 				// We delete characters that we don't need
 				person = person.replaceFirst("Mme ", "");
 				person = person.replaceFirst("M. ", "");
-				
 				person = person.replace(",", "");
+				person = person.replace(".", "");
 
 				// We try to find Q ID
 				String idpersonne = wikidata.wikidata(person);
@@ -233,7 +231,7 @@ public class DataEnrichment {
 						insertpersonne.setString(1, idpersonne);
 						insertpersonne.executeUpdate();
 						insertpersonne.close();
-						// Insertion de la personne dans la table personne
+						// Inserting of the person in personne
 
 						PreparedStatement selectidpersonne = con.prepareStatement("SELECT id FROM personne WHERE wikidataid = (?)");
 						selectidpersonne.setString(1, idpersonne);
@@ -243,7 +241,7 @@ public class DataEnrichment {
 						}
 						idResp.close();
 						selectidpersonne.close();
-						// Sélection de l'ID de la personne dans la table personne
+						// Selecting person ID in personne table
 
 					}
 						
@@ -254,7 +252,7 @@ public class DataEnrichment {
 					insertpresence.close();
 					Qresponseset.close();
 					checkForQ.close();
-					// Insertion dans la table présence de la personne
+					// Inserting in presence table the person
 
 				
 				}

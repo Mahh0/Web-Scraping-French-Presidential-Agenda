@@ -36,6 +36,7 @@ public class MySqlConnection {
 			con = DriverManager.getConnection(url, username, userpasswd);
 		} catch (Exception e) {
 			logger.error("Database connexion error !", e);
+			System.exit(1);
 		}
 		return con;
 		/**
