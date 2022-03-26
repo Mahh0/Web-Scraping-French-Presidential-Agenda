@@ -213,9 +213,12 @@ public class DataEnrichment {
 				person = person.replace(".", "");
 
 				// We try to find Q ID
+				logger.info("============== personne : " + person);
 				String idpersonne = wikidata.wikidata(person);
+				logger.info("wikidata response" + idpersonne);
 
 				if (!idpersonne.isEmpty()) {
+					logger.info("la personne a un id ! ================");
 
 					PreparedStatement checkForQ = con.prepareStatement("SELECT id FROM personne WHERE wikidataid = (?) ");
 					checkForQ.setString(1, idpersonne);
@@ -255,6 +258,56 @@ public class DataEnrichment {
 					// Inserting in presence table the person
 
 				
+				} else {
+					logger.info("la personne n'a pas d'id " + person + "=============================");
+					// Split the name : if the splitter lengths is 2, the name is probably correct, so we will insert it
+					String[] splitter = person.split(" ");
+
+					if (splitter.length==2) { // If the name is in good format (name + surname)
+						String prenom = splitter[0];
+						String nom = splitter[1];
+						
+						// Test if the person is already inserted in personne table
+						PreparedStatement checkForPerson = con.prepareStatement("SELECT id FROM personne WHERE prenom = ? AND nom = ? ");
+						checkForPerson.setString(1, prenom);
+						checkForPerson.setString(2, nom);
+						ResultSet personresponseset = checkForPerson.executeQuery();
+						int id2 = 0;
+						if (personresponseset.next()){
+							id2 = personresponseset.getInt(1);
+						}
+
+						if (id2 == 0) { // If nobody is present in the person table
+							PreparedStatement insertpersonne2 = con.prepareStatement("INSERT INTO personne(prenom, nom) VALUES (?, ?)");
+							insertpersonne2.setString(1, prenom);
+							insertpersonne2.setString(2, nom);
+							insertpersonne2.executeUpdate();
+							insertpersonne2.close();
+						// Inserting of the person in personne
+
+						PreparedStatement selectidpersonne2 = con.prepareStatement("SELECT id FROM personne WHERE prenom = ? AND nom = ?");
+						selectidpersonne2.setString(1, prenom);
+						selectidpersonne2.setString(2, nom);
+						ResultSet idResp2 = selectidpersonne2.executeQuery();
+						if (idResp2.next()){
+							id2 = idResp2.getInt(1);
+						}
+						idResp2.close();
+						selectidpersonne2.close();
+						// Selecting person ID in personne table for presence insert
+						} 
+						
+						// presence insert
+						PreparedStatement insertpresence2 = con.prepareStatement("INSERT INTO presence(idevenement, idpersonne) VALUES (?,?)");
+						insertpresence2.setInt(1, currentEventID);
+						insertpresence2.setInt(2, id2);
+						insertpresence2.executeUpdate();
+						insertpresence2.close();
+
+
+					} else {
+						logger.error("Not inserting " + person);
+					}
 				}
 			}
 		} catch (SQLException sql) {
