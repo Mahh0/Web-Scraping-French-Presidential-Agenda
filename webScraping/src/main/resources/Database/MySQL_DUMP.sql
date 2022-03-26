@@ -30,7 +30,7 @@ CREATE TABLE `evenement` (
   `intitule` text,
   `generated` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3267 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=620 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,8 +43,10 @@ DROP TABLE IF EXISTS `personne`;
 CREATE TABLE `personne` (
   `id` int NOT NULL AUTO_INCREMENT,
   `wikidataid` varchar(45) DEFAULT NULL,
+  `nom` varchar(45) DEFAULT NULL,
+  `prenom` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=473 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +65,7 @@ CREATE TABLE `presence` (
   KEY `idevenement` (`idevenement`),
   CONSTRAINT `presence_ibfk_1` FOREIGN KEY (`idpersonne`) REFERENCES `personne` (`id`),
   CONSTRAINT `presence_ibfk_2` FOREIGN KEY (`idevenement`) REFERENCES `evenement` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1336 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=332 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +84,7 @@ CREATE TABLE `ressource_detail` (
   PRIMARY KEY (`id`),
   KEY `FK_ressource` (`idressources`),
   CONSTRAINT `FK_ressource` FOREIGN KEY (`idressources`) REFERENCES `ressources` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6352 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=814 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +101,7 @@ CREATE TABLE `ressources` (
   PRIMARY KEY (`id`),
   KEY `idTable` (`idTable`),
   CONSTRAINT `ressources_ibfk_1` FOREIGN KEY (`idTable`) REFERENCES `evenement` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1438 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -111,4 +113,4 @@ CREATE TABLE `ressources` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-12 19:10:12
+-- Dump completed on 2022-03-26 18:29:09
