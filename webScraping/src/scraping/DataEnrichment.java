@@ -213,12 +213,9 @@ public class DataEnrichment {
 				person = person.replace(".", "");
 
 				// We try to find Q ID
-				logger.info("============== personne : " + person);
 				String idpersonne = wikidata.wikidata(person);
-				logger.info("wikidata response" + idpersonne);
 
 				if (!idpersonne.isEmpty()) {
-					logger.info("la personne a un id ! ================");
 
 					PreparedStatement checkForQ = con.prepareStatement("SELECT id FROM personne WHERE wikidataid = (?) ");
 					checkForQ.setString(1, idpersonne);
@@ -259,7 +256,6 @@ public class DataEnrichment {
 
 				
 				} else {
-					logger.info("la personne n'a pas d'id " + person + "=============================");
 					// Split the name : if the splitter lengths is 2, the name is probably correct, so we will insert it
 					String[] splitter = person.split(" ");
 
@@ -305,8 +301,6 @@ public class DataEnrichment {
 						insertpresence2.close();
 
 
-					} else {
-						logger.error("Not inserting " + person);
 					}
 				}
 			}
