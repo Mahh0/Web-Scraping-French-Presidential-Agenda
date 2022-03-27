@@ -6,7 +6,6 @@
   <h3 align="center">Web Scraping of Presidential Agenda</h3>
 
   <p align="center">
-    En cours...
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Template used »</strong></a>
     <br />
@@ -23,38 +22,40 @@
 
 This project is a project for the semesters 3 & 4 for <a href="https://iut-blois.univ-tours.fr/version-francaise/formations/dut-reseaux-et-telecommunications">IUT R&T Of Blois</a>
 
-The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. This projects was built with VSCode, Java, <a href="https://jsoup.org/">Jsoup Library</a> and a <a href="https://www.mysql.com/fr/">MySql Database</a>.
+The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. This projects was built with VSCode, Java, <a href="https://jsoup.org/">Jsoup Library</a>, a <a href="https://www.mysql.com/fr/">MySql Database</a>.
 
 ### Built With
 
 * [Jsoup](https://jsoup.org/)
 * [Java](https://www.java.com/fr/)
-* [Eclipse](https://www.eclipse.org/downloads/)
+* [VSCode](https://code.visualstudio.com/)
 * [MySQL and JDBC](https://dev.mysql.com/downloads/)
+* [Maven](https://maven.apache.org/)
 
 
 ### Prerequisites
-VSCode
-MySQL Database
+* [VSCode](https://code.visualstudio.com/)
+* [MySQL server, with installed database](https://dev.mysql.com/downloads/)
 
 ### Installation (Windows and Linux)
 
-1. Unzip the files or clone in a good location.
-* git
+1. Unzip the files or clone in your workspace
+* 
   ```sh
   git clone https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda
   ```
 
-2. Install the MySQL Database. A MySQL dump is provided in ```Web-Scraping-Of-Presidential-Agenda\webScraping\src\main\resources```
+2. Install the MySQL Database. A MySQL dump is provided in ```Web-Scraping-Of-Presidential-Agenda\webScraping\src\main\resources\Database```
 ```sh
-cd "Web-Scraping-Of-Presidential-Agenda\webScraping\src\main\resources"
-mysql -u root -p
+cd ".\Web-Scraping-Of-Presidential-Agenda\webScraping\src\main\resources\Database"
+mysql -u root -proot
   create database webscraping;
   exit
+  
 mysql -u root -p webscraping < MySQL_DUMP.sql
 ```
 
-3. Be sure that you have maven and java configured on VSCode.
+3. Be sure that you have java configured on VSCode and maven can be necessary.
 
 4. Enjoy
 
@@ -63,6 +64,7 @@ mysql -u root -p webscraping < MySQL_DUMP.sql
 ## Roadmap
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues).
+All reports of this project can be found on my [Google Drive](https://drive.google.com/drive/folders/1o6rennKfMEGkGxXvfB0qvTHNwIg8ggoW?usp=sharing) 🇫🇷
 
 
 
@@ -79,12 +81,6 @@ Contributions are what make the open source community such an amazing place to l
 
 
 
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-
 <!-- CONTACT -->
 ## Contact
 
@@ -96,7 +92,6 @@ Project Link: [https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda](htt
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-* [Choose an Open Source License](https://choosealicense.com)
 * [GitHub Pages](https://pages.github.com)
 
 <!-- MARKDOWN LINKS & IMAGES -->
