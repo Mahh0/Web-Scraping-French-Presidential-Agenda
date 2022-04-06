@@ -1,6 +1,3 @@
-[![Contributors][contributors-shield]][contributors-url]
-[![Issues][issues-shield]][issues-url]
-
 <!-- PROJECT LOGO -->
 <br />
   <h3 align="center">Web Scraping of Presidential Agenda</h3>
@@ -63,7 +60,7 @@ mysql -u root -p webscraping < MySQL_DUMP.sql
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda/issues) for a list of proposed features (and known issues).
 All reports of this project can be found on my [Google Drive](https://drive.google.com/drive/folders/1o6rennKfMEGkGxXvfB0qvTHNwIg8ggoW?usp=sharing) 🇫🇷
 
 
