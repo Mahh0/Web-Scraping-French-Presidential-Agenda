@@ -17,7 +17,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is a project for the semesters 3 & 4 for <a href="https://iut-blois.univ-tours.fr/version-francaise/formations/dut-reseaux-et-telecommunications">IUT R&T Of Blois</a>
+This project is a project for the semesters 3 & 4 for IUT.
 
 The goal of this project is to scrape datas from <a href="https://www.elysee.fr/agenda">French Presidential Agenda Website</a>. This projects was built with VSCode, Java, <a href="https://jsoup.org/">Jsoup Library</a>, a <a href="https://www.mysql.com/fr/">MySql Database</a>.
 
@@ -61,7 +61,7 @@ mysql -u root -p webscraping < MySQL_DUMP.sql
 ## Roadmap
 
 See the [open issues](https://github.com/Mahh0/Web-Scraping-Of-Presidential-Agenda/issues) for a list of proposed features (and known issues).
-All reports of this project can be found on my [Google Drive](https://drive.google.com/drive/folders/1o6rennKfMEGkGxXvfB0qvTHNwIg8ggoW?usp=sharing) 🇫🇷
+All reports of this project can be found on my Google Drive (pm for link). 🇫🇷
 
 
 
